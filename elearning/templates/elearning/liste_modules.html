@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Modules</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #007bff; text-align: center; margin-bottom: 30px; }
+        .module-list { list-style: none; padding: 0; }
+        .module-item { background: #e9ecef; margin-bottom: 15px; padding: 15px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .module-item h2 { margin: 0; color: #343a40; font-size: 1.2em; }
+        .module-item p { margin: 5px 0 0; color: #6c757d; font-size: 0.9em; }
+        .module-link { text-decoration: none; background-color: #28a745; color: white; padding: 8px 15px; border-radius: 5px; transition: background-color 0.3s ease; }
+        .module-link:hover { background-color: #218838; }
+        .no-modules { text-align: center; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tous les Modules E-learning</h1>
+
+        {% if modules %}
+            <ul class="module-list">
+                {% for module in modules %}
+                    <li class="module-item">
+                        <div>
+                            <h2>{{ module.title }}</h2>
+                            <p>{{ module.description|truncatechars:100 }}</p>
+                        </div>
+                        <a href="{% url 'elearning:detail_module' module.id %}" class="module-link">Voir Détails</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-modules">Aucun module n'est disponible pour le moment.</p>
+        {% endif %}
+
+        <p style="text-align: center; margin-top: 20px;"><a href="{% url 'elearning:home' %}">Retour à l'accueil</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Inscriptions à" %} {{ event.title }} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "Inscriptions à" %} {{ event.title }}</h1>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Total" %}</h5>
+                    <p>{{ stats.total }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Confirmées" %}</h5>
+                    <p>{{ stats.confirmed }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "En attente" %}</h5>
+                    <p>{{ stats.pending }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Annulées" %}</h5>
+                    <p>{{ stats.cancelled }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <select name="status" class="form-select">
+                <option value="">{% trans "Tous les statuts" %}</option>
+                {% for status_value, status_label in status_choices %}
+                <option value="{{ status_value }}" {% if status_value == current_status_filter %}selected{% endif %}>{{ status_label }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary">{% trans "Filtrer" %}</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>{% trans "Participant" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Date d'inscription" %}</th>
+                <th>{% trans "Statut" %}</th>
+                <th>{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registration in registrations %}
+            <tr>
+                <td>{{ registration.full_name }}</td>
+                <td>{{ registration.email }}</td>
+                <td>{{ registration.registered_at|date:"d M Y H:i" }}</td>
+                <td>
+                    <form method="POST" action="{% url 'events:update_registration_status' registration_id=registration.id %}">
+                        {% csrf_token %}
+                        <select name="status" class="form-select" onchange="this.form.submit()">
+                            {% for status_value, status_label in status_choices %}
+                            <option value="{{ status_value }}" {% if registration.status == status_value %}selected{% endif %}>{{ status_label }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    <a href="{% url 'events:registration_detail' pk=registration.id %}" class="btn btn-sm btn-info">{% trans "Détails" %}</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">{% trans "Aucune inscription." %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'events:export_registrations' slug=event.slug %}" class="btn btn-success">{% trans "Exporter en CSV" %}</a>
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_status_filter %}&status={{ current_status_filter }}{% endif %}">{% trans "Précédent" %}</a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}{% if current_status_filter %}&status={{ current_status_filter }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_status_filter %}&status={{ current_status_filter }}{% endif %}">{% trans "Suivant" %}</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

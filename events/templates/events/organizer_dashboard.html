@@ -1,0 +1,121 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Tableau de bord organisateur" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "Tableau de bord organisateur" %}</h1>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Événements publiés" %}</h5>
+                    <p>{{ published_events }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Événements brouillons" %}</h5>
+                    <p>{{ draft_events }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Événements terminés" %}</h5>
+                    <p>{{ completed_events }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Total inscriptions" %}</h5>
+                    <p>{{ total_registrations }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>{% trans "Inscriptions récentes" %}</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>{% trans "Événement" %}</th>
+                <th>{% trans "Participant" %}</th>
+                <th>{% trans "Date d'inscription" %}</th>
+                <th>{% trans "Statut" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registration in recent_registrations %}
+            <tr>
+                <td><a href="{% url 'events:event_detail' slug=registration.event.slug %}">{{ registration.event.title }}</a></td>
+                <td>{{ registration.full_name }}</td>
+                <td>{{ registration.registered_at|date:"d M Y H:i" }}</td>
+                <td>{{ registration.get_status_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">{% trans "Aucune inscription récente." %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3>{% trans "Vos événements" %}</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>{% trans "Titre" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Statut" %}</th>
+                <th>{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td>{{ event.title }}</td>
+                <td>{{ event.start_date|date:"d M Y" }}</td>
+                <td>{{ event.get_status_display }}</td>
+                <td>
+                    <a href="{% url 'events:event_registrations' slug=event.slug %}" class="btn btn-sm btn-primary">{% trans "Inscriptions" %}</a>
+                    <a href="{% url 'admin:events_event_change' event.id %}" class="btn btn-sm btn-secondary">{% trans "Modifier" %}</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">{% trans "Aucun événement créé." %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Précédent" %}</a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Suivant" %}</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

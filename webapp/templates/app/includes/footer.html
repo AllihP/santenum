@@ -1,0 +1,520 @@
+{% load static %}
+{% load i18n %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+
+<!-- Footer Moderne -->
+<footer class="footer-modern" role="contentinfo">
+    <div class="footer-container">
+        <!-- Section principale du footer -->
+        <div class="footer-main">
+            <!-- À propos -->
+            <div class="footer-section">
+                <h3>{% trans "Santé Numérique" %}</h3>
+                <p>{% trans "Plateforme numérique dédiée à l'amélioration de la santé publique au Tchad. Nous œuvrons pour un système de santé moderne et accessible à tous." %}</p>
+                <div class="footer-logo" class="logos">
+                    <img src="{% static 'images/logo.png' %}" alt="{% trans 'Logo Santé Numérique' %}" loading="lazy">
+                </div>
+            </div>
+
+            <!-- Navigation rapide -->
+            <div class="footer-section">
+                <h4>{% trans "Navigation" %}</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'webapp:candidature' %}">{% trans "Candidatures" %}</a></li>
+                    <li><a href="{% url 'webapp:suggestions' %}">{% trans "Suggestions" %}</a></li>
+                </ul>
+            </div>
+
+            <!-- Services -->
+            <div class="footer-section">
+                <h4>{% trans "Nos Services" %}</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'webapp:soins' %}">{% trans "Offre soins santé" %}</a></li>
+                    <li><a href="#">{% trans "Informatique technologie équipements" %}</a></li>
+                    <li><a href="#">{% trans "Suivi et évaluation" %}</a></li>
+                    <li><a href="#">{% trans "Administration et formation" %}</a></li>
+                    <li><a href="#">{% trans "LAB d'accélération" %}</a></li>
+                    <li><a href="#">{% trans "Immersion en Med Moderne" %}</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="footer-section">
+                <h4>{% trans "Contact" %}</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{% trans "Avenue Charles de Gaulle, N'Djamena, Tchad" %}</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+235 66 12 34 56</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>contact@sante-numerique.td</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>{% trans "Lun-Ven: 8h00 - 17h00" %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Réseaux sociaux -->
+        <div class="footer-social">
+            <h4>{% trans "Suivez-nous" %}</h4>
+            <div class="social-links">
+                <a href="https://facebook.com/santenumurique.td" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Suivez-nous sur Facebook' %}">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com/santenumurique.td" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Suivez-nous sur Instagram' %}">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://twitter.com/santenumurique_td" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Suivez-nous sur Twitter' %}">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://linkedin.com/company/sante-numerique-tchad" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Suivez-nous sur LinkedIn' %}">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://youtube.com/santenumurique" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Notre chaîne YouTube' %}">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Partenaires -->
+        <div class="footer-partners">
+            <h4>{% trans "Nos Partenaires" %}</h4>
+            <div class="partners-grid">
+                <a href="https://sante.gouv.td" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Ministère de la Santé Publique du Tchad' %}">
+                    <img src="{% static 'images/minitere-de-la-santé.png' %}" alt="{% trans 'Logo du Ministère de la Santé Publique' %}" loading="lazy">
+                </a>
+                <a href="https://www.who.int/countries/tcd" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'OMS Tchad' %}">
+                    <img src="{% static 'images/logo-oms.png' %}" alt="{% trans 'Logo de l\'OMS' %}" loading="lazy">
+                </a>
+                <a href="https://www.eda.admin.ch/countries/chad" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Coopération Suisse au Tchad' %}">
+                    <img src="{% static 'images/logo-suisse.png' %}" alt="{% trans 'Logo de la Suisse' %}" loading="lazy">
+                </a>
+                <a href="https://www.undp.org/chad" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'PNUD Tchad' %}">
+                    <img src="{% static 'images/logo-undp.png' %}" alt="{% trans 'Logo du PNUD' %}" loading="lazy">
+                </a>
+                <a href="https://www.worldbank.org/en/country/chad" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Banque Mondiale Tchad' %}">
+                    <img src="{% static 'images/logo-worldbank.png' %}" alt="{% trans 'Logo de la Banque Mondiale' %}" loading="lazy">
+                </a>
+            </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-newsletter">
+            <h4>{% trans "Newsletter" %}</h4>
+            <p>{% trans "Restez informé de nos dernières actualités et services" %}</p>
+            <form class="newsletter-form" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="{% trans 'Votre adresse email' %}" required>
+                    <button type="submit">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer bottom -->
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <div class="footer-bottom-content">
+                <div class="copyright">
+                    <p>© {{ current_year|default:"2025" }} {% trans "Santé Numérique Tchad. Tous droits réservés." %}</p>
+                </div>
+                <div class="footer-bottom-links">
+                    <a href="{% url 'webapp:services' %}">{% trans "Politique de confidentialité" %}</a>
+                    <a href="{% url 'webapp:services' %}">{% trans "Conditions d'utilisation" %}</a>
+                    <a href="{% url 'webapp:services' %}">{% trans "Politique des cookies" %}</a>
+                    <a href="{% url 'webapp:services' %}">{% trans "Mentions légales" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+/* ===== FOOTER MODERNE STYLES ===== */
+.footer-modern {
+    background: linear-gradient(135deg, #1a2332 0%, #2c3e50 100%);
+    color: #ecf0f1;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-main {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    padding: 60px 0 40px;
+}
+
+.footer-section h3 {
+    color: #3498db;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.footer-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    border-radius: 2px;
+}
+
+.footer-section h4 {
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.footer-section h4::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: #3498db;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+.footer-section p {
+    color: #bdc3c7;
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.footer-links a::before {
+    content: '▶';
+    color: #3498db;
+    font-size: 10px;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #3498db;
+    transform: translateX(5px);
+}
+
+.footer-links a:hover::before {
+    color: #2ecc71;
+}
+
+/* Contact Info */
+.contact-info {
+    margin-top: 15px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+    background: rgba(52, 152, 219, 0.1);
+    transform: translateX(5px);
+}
+
+.contact-item i {
+    color: #3498db;
+    font-size: 16px;
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+.contact-item span {
+    color: #bdc3c7;
+    font-size: 14px;
+}
+
+/* Social Links */
+.footer-social {
+    text-align: center;
+    padding: 30px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #ecf0f1;
+    font-size: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.social-links a:hover {
+    background: #3498db;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+    border-color: #2ecc71;
+}
+
+/* Partners */
+.footer-partners {
+    padding: 30px 0;
+    text-align: center;
+}
+
+.partners-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.partners-grid a {
+    display: block;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.partners-grid a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+.partners-grid img {
+    height: 40px;
+    width: auto;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.partners-grid a:hover img {
+    opacity: 1;
+}
+
+/* Newsletter */
+.footer-newsletter {
+    padding: 30px 0;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.newsletter-form {
+    margin-top: 20px;
+}
+
+.input-group {
+    display: flex;
+    max-width: 400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.input-group:focus-within {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.input-group input {
+    flex: 1;
+    padding: 15px 20px;
+    background: transparent;
+    border: none;
+    color: #ecf0f1;
+    font-size: 14px;
+    outline: none;
+}
+
+.input-group input::placeholder {
+    color: #bdc3c7;
+}
+
+.input-group button {
+    padding: 15px 20px;
+    background: #3498db;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.input-group button:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px 0;
+}
+
+.footer-bottom-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.copyright p {
+    color: #bdc3c7;
+    font-size: 14px;
+}
+
+.footer-bottom-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-bottom-links a {
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s ease;
+}
+
+.footer-bottom-links a:hover {
+    color: #3498db;
+}
+
+/* Logo dans footer */
+.footer-logo img {
+    height: 60px;
+    width: auto;
+    margin-top: 15px;
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer-main {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 40px 0 30px;
+    }
+    
+    .footer-section h3 {
+        font-size: 20px;
+    }
+    
+    .social-links {
+        gap: 10px;
+    }
+    
+    .social-links a {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    .partners-grid {
+        gap: 15px;
+    }
+    
+    .partners-grid img {
+        height: 35px;
+    }
+    
+    .footer-bottom-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-bottom-links {
+        justify-content: center;
+    }
+    
+    .input-group {
+        flex-direction: column;
+        border-radius: 8px;
+    }
+    
+    .input-group button {
+        border-radius: 0 0 8px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-container {
+        padding: 0 15px;
+    }
+    
+    .footer-section h4 {
+        font-size: 16px;
+    }
+    
+    .contact-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .contact-item i {
+        margin-bottom: 5px;
+    }
+}
+</style>

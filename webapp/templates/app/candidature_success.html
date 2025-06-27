@@ -1,0 +1,53 @@
+{% extends "./includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Candidature Envoyée" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<style>
+:root {
+    --primary-blue: #1d4ed8;
+    --text-dark: #111827;
+    --white: #ffffff;
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --border-radius: 0.5rem;
+}
+
+.success-section {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.success-section h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.success-section p {
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+@media (max-width: 768px) {
+    .success-section {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+    }
+    .success-section h1 {
+        font-size: 1.75rem;
+    }
+}
+</style>
+<section class="success-section fade-in-up">
+    <h1>{% trans "Candidature Envoyée" %}</h1>
+    <p>{{ message }}</p>
+</section>
+{% endblock %}

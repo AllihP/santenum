@@ -1,0 +1,19 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% trans "Confirmation d'inscription" %}</title>
+</head>
+<body>
+    <h1>{% trans "Confirmation d'inscription" %}</h1>
+    <p>{% trans "Bonjour" %} {{ registration.full_name }},</p>
+    <p>{% trans "Votre inscription à l'événement" %} <strong>{{ event.title }}</strong> {% trans "a été confirmée." %}</p>
+    <p>
+        <strong>{% trans "Détails :" %}</strong><br>
+        {% trans "Date :" %} {{ event.start_date|date:"d M Y" }} {% trans "de" %} {{ event.start_date|time:"H:i" }} {% trans "à" %} {{ event.end_date|time:"H:i" }}<br>
+        {% trans "Lieu :" %} {% if event.is_online %}{% trans "En ligne" %}{% else %}{{ event.location.city }}{% endif %}
+    </p>
+    <p>{% trans "Merci de votre participation !" %}</p>
+    <p>{% trans "L'équipe" %} {{ site_name }}</p>
+</body>
+</html>

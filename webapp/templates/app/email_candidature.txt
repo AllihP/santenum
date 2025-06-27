@@ -1,0 +1,45 @@
+# templates/candidature/email_candidature.txt
+NOUVELLE CANDIDATURE REÇUE
+Application de santé numérique
+
+INFORMATIONS PERSONNELLES
+========================
+Nom: {{ candidature.nom }}
+Prénom: {{ candidature.prenom }}
+Date de naissance: {{ candidature.date_naissance }}
+Email: {{ candidature.email }}
+Téléphone: {{ candidature.telephone }}
+Adresse: {{ candidature.adresse }}
+Ville: {{ candidature.ville }} ({{ candidature.code_postal }})
+
+FORMATION ET EXPÉRIENCE
+=======================
+Niveau d'étude: {{ candidature.get_niveau_etude_display }}
+Domaine: {{ candidature.get_domaine_etude_display }}
+Établissement: {{ candidature.etablissement }}
+Année du diplôme: {{ candidature.annee_diplome }}
+
+Expérience dans la santé:
+{{ candidature.experience_sante }}
+
+MOTIVATION ET DISPONIBILITÉ
+===========================
+Motivation:
+{{ candidature.motivation }}
+
+Compétences techniques:
+{{ candidature.competences_techniques }}
+
+Disponibilité: {{ candidature.disponibilite }}
+{% if candidature.salaire_souhaite %}Salaire souhaité: {{ candidature.salaire_souhaite }}€{% endif %}
+
+DOCUMENTS
+=========
+CV: {% if candidature.cv %}Fichier joint{% else %}Non fourni{% endif %}
+Lettre de motivation: {% if candidature.lettre_motivation %}Fichier joint{% else %}Non fournie{% endif %}
+
+INFORMATIONS COMPLÉMENTAIRES
+============================
+Date de candidature: {{ candidature.date_creation|date:"d/m/Y à H:i" }}
+Email de contact: {{ candidature.email }}
+

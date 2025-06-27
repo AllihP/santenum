@@ -1,0 +1,19 @@
+#: templates/app/index.html:100
+msgid "À PROPOS"
+msgstr "À PROPOS"
+
+#: templates/app/index.html:105
+msgid "La technologie au service de la santé pour tous"
+msgstr "La technologie au service de la santé pour tous"
+
+#: templates/app/index.html:120
+msgid "Notre Vision"
+msgstr "Notre Vision"
+
+#: templates/app/index.html:121
+msgid "Nos Objectifs Stratégiques"
+msgstr "Nos Objectifs Stratégiques"
+
+#: templates/app/index.html:122
+msgid "Nos partenaires"
+msgstr "Nos partenaires"

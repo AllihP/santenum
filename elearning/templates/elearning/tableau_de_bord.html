@@ -1,0 +1,74 @@
+{# santenumerique/elearning/templates/elearning/dashboard.html #}
+{% extends 'elearning/base.html' %} {# Assurez-vous d'avoir un fichier base.html pour l'héritage #}
+{% load static %} {# Pour charger des fichiers statiques si vous en avez besoin #}
+
+{% block content %}
+<div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style='font-family: Lexend, "Noto Sans", sans-serif;'>
+  <div class="layout-container flex h-full grow flex-col">
+    {# La section header sera probablement dans votre base.html si vous utilisez {% extends %} #}
+    {# Si ce n'est pas le cas, vous devrez la copier/coller depuis accueil.html #}
+
+    <div class="gap-1 px-6 flex flex-1 justify-center py-5">
+      <div class="layout-content-container flex flex-col w-full max-w-[960px] gap-8">
+        {# Section de bienvenue personnalisée #}
+        <section class="flex flex-col gap-6 p-4 md:p-6 lg:p-10 rounded-lg shadow-md bg-gradient-to-r from-blue-50 to-indigo-50">
+            <h1 class="text-3xl font-extrabold text-[#111418] leading-tight">Bienvenue, {{ user.first_name|default:user.username }} !</h1>
+            <p class="text-lg text-[#60748a] leading-relaxed">
+                Explorez des ressources adaptées à votre profil de {{ user_type|capfirst }}.
+                Préparez-vous à enrichir vos connaissances en santé numérique.
+            </p>
+            {# Vous pouvez ajouter un lien vers la page de profil ou la liste complète des modules ici #}
+            <div class="flex flex-wrap gap-4">
+                <a href="{% url 'elearning:liste_modules' %}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#007bff] hover:bg-[#0056b3]">
+                    Voir tous les modules
+                </a>
+                <a href="{% url 'elearning:mon_profil' %}" class="inline-flex items-center justify-center px-6 py-3 border border-[#007bff] text-base font-medium rounded-md text-[#007bff] bg-white hover:bg-gray-50">
+                    Mon Profil
+                </a>
+            </div>
+        </section>
+
+
+        {# Section des modules recommandés #}
+        <section class="flex flex-col gap-6">
+          <div class="flex flex-col gap-2">
+            <h2 class="text-2xl font-bold text-[#111418] leading-tight">Modules Recommandés pour vous</h2>
+            <p class="text-base text-[#60748a] font-normal leading-normal">Des modules choisis spécialement pour votre type d'utilisateur.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for module in modules_recommandes %}
+            <div class="flex flex-col gap-3 rounded-lg overflow-hidden border border-[#dbe0e6] bg-white shadow-sm">
+              {% if module.image_module %}
+              <div class="relative h-48 w-full">
+                <img src="{{ module.image_module.url }}" alt="{{ module.titre }}" class="absolute inset-0 h-full w-full object-cover"/>
+              </div>
+              {% else %}
+              <div class="relative h-48 w-full bg-gray-200 flex items-center justify-center">
+                <span class="text-gray-500">Pas d'image</span>
+              </div>
+              {% endif %}
+              <div class="flex flex-col gap-1 p-4">
+                <p class="text-[#60748a] text-sm font-normal leading-normal">{{ module.categorie.nom }} | {{ module.get_niveau_display }}</p>
+                <h3 class="text-lg font-medium text-[#111418] leading-tight">{{ module.titre }}</h3>
+                <p class="text-[#60748a] text-base font-normal leading-normal line-clamp-3">{{ module.description|truncatechars:100 }}</p>
+              </div>
+              <div class="flex justify-end p-4 pt-0">
+                <a href="{% url 'elearning:detail_module' module.id %}" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#007bff] hover:bg-[#0056b3]">
+                  Commencer
+                </a>
+              </div>
+            </div>
+            {% empty %}
+            <p class="text-[#60748a] text-base font-normal leading-normal col-span-full">Aucun module recommandé pour le moment. Explorez la <a href="{% url 'elearning:liste_modules' %}" class="text-[#007bff] hover:underline">liste complète des modules</a>.</p>
+            {% endfor %}
+          </div>
+        </section>
+
+        {# La section footer sera probablement dans votre base.html si vous utilisez {% extends %} #}
+        {# Si ce n'est pas le cas, vous devrez la copier/coller depuis accueil.html #}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

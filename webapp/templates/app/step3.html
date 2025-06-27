@@ -1,0 +1,71 @@
+
+<!-- templates/candidature/step3.html -->
+{% extends 'candidature/base.html' %}
+
+{% block title %}Étape 3 - Motivation et disponibilité{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="mb-4">
+            <i class="fas fa-heart text-primary me-2"></i>
+            Motivation et disponibilité
+        </h3>
+        
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="{{ form.motivation.id_for_label }}" class="form-label">
+                    <i class="fas fa-lightbulb me-1"></i>Motivation *
+                </label>
+                {{ form.motivation }}
+                {% if form.motivation.errors %}
+                    <div class="text-danger small mt-1">{{ form.motivation.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.competences_techniques.id_for_label }}" class="form-label">
+                    <i class="fas fa-cogs me-1"></i>Compétences techniques *
+                </label>
+                {{ form.competences_techniques }}
+                {% if form.competences_techniques.errors %}
+                    <div class="text-danger small mt-1">{{ form.competences_techniques.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.disponibilite.id_for_label }}" class="form-label">
+                        <i class="fas fa-clock me-1"></i>Disponibilité *
+                    </label>
+                    {{ form.disponibilite }}
+                    {% if form.disponibilite.errors %}
+                        <div class="text-danger small mt-1">{{ form.disponibilite.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.salaire_souhaite.id_for_label }}" class="form-label">
+                        <i class="fas fa-euro-sign me-1"></i>Salaire souhaité (optionnel)
+                    </label>
+                    {{ form.salaire_souhaite }}
+                    {% if form.salaire_souhaite.errors %}
+                        <div class="text-danger small mt-1">{{ form.salaire_souhaite.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'candidature_step2' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Précédent
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-arrow-right me-2"></i>Étape suivante
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

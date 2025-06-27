@@ -1,0 +1,387 @@
+{% extends "./includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Evenements" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    /* Variables CSS pour la cohérence */
+    :root {
+        --primary-color: #2c5282;
+        --secondary-color: #4a90e2;
+        --accent-color: #00c851;
+        --warning-color: #ffae00;
+        --danger-color: #ff4444;
+        --success-color: #00c851;
+        --info-color: #33b5e5;
+        
+        --text-primary: #2d3748;
+        --text-secondary: #4a5568;
+        --text-muted: #718096;
+        
+        --bg-light: #f7fafc;
+        --border-color: #cbd5e0;
+    }
+
+    /* Styles généraux */
+    body {
+        font-family: 'Arial', sans-serif;
+        color: var(--text-primary);
+    }
+
+    .section-title {
+        color: var(--primary-color);
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    /* Formulaire de recherche et filtres */
+    .filter-section {
+        background-color: var(--bg-light);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+    }
+
+    .form-control, .form-select {
+        border-color: var(--border-color);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(44, 82, 130, 0.25);
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: #234064; /* Darker shade of primary */
+        border-color: #234064;
+    }
+
+    .btn-secondary {
+        background-color: var(--text-muted);
+        border-color: var(--text-muted);
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6473; /* Darker shade of secondary */
+        border-color: #5a6473;
+    }
+
+    /* Cartes d'événements */
+    .event-card {
+        background-color: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease-in-out;
+        height: 100%; /* Important pour que toutes les cartes aient la même hauteur dans une rangée */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .event-card .card-body {
+        padding: 20px;
+        flex-grow: 1; /* Permet au contenu de s'étendre */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-card .card-title {
+        color: var(--primary-color);
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+
+    .event-card .card-text {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+
+    .event-card .card-info {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 10px;
+    }
+
+    .event-card .card-info i {
+        margin-right: 5px;
+        color: var(--secondary-color);
+    }
+
+    .event-card .card-footer {
+        background-color: #f0f4f8;
+        border-top: 1px solid var(--border-color);
+        padding: 15px 20px;
+        margin-top: auto; /* Pousse le footer vers le bas */
+    }
+
+    .event-card .badge {
+        font-size: 0.75em;
+        padding: 0.4em 0.7em;
+    }
+
+    /* Badges de statut d'événement */
+    .badge-status-published { background-color: var(--success-color); color: #fff; }
+    .badge-status-upcoming { background-color: var(--info-color); color: #fff; }
+    .badge-status-ongoing { background-color: var(--primary-color); color: #fff; }
+    .badge-status-past { background-color: var(--text-muted); color: #fff; }
+    .badge-status-cancelled { background-color: var(--danger-color); color: #fff; }
+    .badge-status-draft, .badge-status-pending-review, .badge-status-archived { background-color: var(--warning-color); color: #fff; }
+
+    /* Boutons de détail */
+    .btn-detail {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: #fff;
+    }
+    .btn-detail:hover {
+        background-color: #00a040;
+        border-color: #00a040;
+    }
+
+    /* Section d'abonnement */
+    .newsletter-section {
+        background-color: var(--primary-color);
+        color: #fff;
+        padding: 60px 0;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .newsletter-section .form-group {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .newsletter-section input[type="email"] {
+        max-width: 400px;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: none;
+        padding: 10px 15px;
+        color: var(--text-primary);
+    }
+
+    .newsletter-section .btn-primary {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .newsletter-section .btn-primary:hover {
+        background-color: #00a040;
+        border-color: #00a040;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        .filter-section {
+            padding: 20px;
+        }
+        .newsletter-section input[type="email"] {
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+        .newsletter-section .form-group {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="section-title text-center mb-4">{% trans "Nos Événements" %}</h1>
+
+    <div class="filter-section">
+        <h3 class="mb-3 text-center">{% trans "Filtrez les événements" %}</h3>
+        <form method="get" class="row g-3 align-items-end" id="event-filter-form">
+            {% csrf_token %}
+            
+            <div class="col-md-6 col-lg-3">
+                <label for="{{ search_form.search.id_for_label }}" class="form-label">{{ search_form.search.label }}</label>
+                {{ search_form.search }}
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="{{ search_form.category.id_for_label }}" class="form-label">{{ search_form.category.label }}</label>
+                {{ search_form.category }}
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="{{ search_form.location_city.id_for_label }}" class="form-label">{{ search_form.location_city.label }}</label>
+                {{ search_form.location_city }}
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="{{ search_form.location_region.id_for_label }}" class="form-label">{{ search_form.location_region.label }}</label>
+                {{ search_form.location_region }}
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="{{ search_form.event_type.id_for_label }}" class="form-label">{{ search_form.event_type.label }}</label>
+                {{ search_form.event_type }}
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="{{ search_form.date_filter.id_for_label }}" class="form-label">{{ search_form.date_filter.label }}</label>
+                {{ search_form.date_filter }}
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="{{ search_form.is_online.id_for_label }}" class="form-label">{{ search_form.is_online.label }}</label>
+                {{ search_form.is_online }}
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="{{ search_form.sort_by.id_for_label }}" class="form-label">{{ search_form.sort_by.label }}</label>
+                {{ search_form.sort_by }}
+            </div>
+            
+            <div class="col-12 mt-4 text-center">
+                <button type="submit" class="btn btn-primary me-2">{% trans "Filtrer les événements" %}</button>
+                <a href="{% url 'events:event_list' %}" class="btn btn-secondary">{% trans "Réinitialiser les filtres" %}</a>
+            </div>
+        </form>
+    </div>
+
+    <div id="event-list-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% if events %}
+            {% for event in events %}
+            <div class="col">
+                <div class="card event-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ event.title }}</h5>
+                        <p class="card-text">{{ event.description|truncatechars:100 }}</p>
+                        <div class="card-info">
+                            <p><i class="fas fa-calendar-alt"></i> {% trans "Date" %}: 
+                                {% if event.start_date.date == event.end_date.date %}
+                                    {{ event.start_date|date:"d M Y" }}
+                                {% else %}
+                                    {{ event.start_date|date:"d M Y" }} - {{ event.end_date|date:"d M Y" }}
+                                {% endif %}
+                            </p>
+                            <p><i class="fas fa-clock"></i> {% trans "Heure" %}: {{ event.start_date|date:"H:i" }} - {{ event.end_date|date:"H:i" }}</p>
+                            <p><i class="fas fa-tags"></i> {% trans "Catégorie" %}: {{ event.category.get_name_display }}</p>
+                            <p><i class="fas fa-tag"></i> {% trans "Type" %}: {{ event.get_type_display }}</p>
+                            
+                            {% if event.is_online %}
+                                <p><i class="fas fa-globe"></i> {% trans "Lieu" %}: {% trans "En ligne" %}</p>
+                            {% else %}
+                                <p><i class="fas fa-map-marker-alt"></i> {% trans "Lieu" %}: {% if event.location %}{{ event.location.name }}{% if event.location.city %}, {{ event.location.get_city_display }}{% endif %}{% else %}{% trans "Non spécifié" %}{% endif %}</p>
+                            {% endif %}
+
+                            {% if event.registration_deadline %}
+                                <p><i class="fas fa-clipboard-list"></i> {% trans "Inscriptions" %}: {% if event.is_registration_open %}{% trans "Ouvertes jusqu'au" %} {{ event.registration_deadline|date:"d M Y H:i" }}{% else %}{% trans "Fermées" %}{% endif %}</p>
+                            {% else %}
+                                <p><i class="fas fa-clipboard-list"></i> {% trans "Inscriptions" %}: {% if event.is_registration_open %}{% trans "Ouvertes" %}{% else %}{% trans "Fermées" %}{% endif %}</p>
+                            {% endif %}
+
+                            {% if event.max_participants %}
+                                <p><i class="fas fa-users"></i> {% trans "Participants" %}: {{ event.current_participants }}/{% if event.max_participants %}{{ event.max_participants }}{% else %}{% trans "Illimité" %}{% endif %}</p>
+                            {% else %}
+                                <p><i class="fas fa-users"></i> {% trans "Participants" %}: {{ event.current_participants }} ({% trans "Illimité" %})</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <div>
+                            {% if event.is_ongoing %}
+                                <span class="badge badge-status-ongoing">{% trans "En cours" %}</span>
+                            {% elif event.is_upcoming %}
+                                <span class="badge badge-status-upcoming">{% trans "À venir" %}</span>
+                            {% elif event.is_past %}
+                                <span class="badge badge-status-past">{% trans "Passé" %}</span>
+                            {% else %}
+                                <span class="badge badge-status-draft">{% trans "Statut inconnu" %}</span>
+                            {% endif %}
+                        </div>
+                        {# Assurez-vous que l'URL 'event_detail' existe dans urls.py #}
+                        {# Si vous avez une vue de détail pour les événements #}
+                        {# <a href="{% url 'events:event_detail' slug=event.slug %}" class="btn btn-detail btn-sm">{% trans "Voir les détails" %}</a> #}
+                        {# Pour le moment, pas de lien de détail car la vue n'a pas été fournie #}
+                        <a href="#" class="btn btn-detail btn-sm">{% trans "Voir les détails" %}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <p class="lead">{% trans "Aucun événement trouvé pour les critères sélectionnés." %}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    {# Zone pour le chargement infini #}
+    <div id="loading-spinner" class="text-center mt-4" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">{% trans "Chargement..." %}</span>
+        </div>
+        <p class="text-muted mt-2">{% trans "Chargement des événements..." %}</p>
+    </div>
+
+    {# Indicateur de fin de contenu #}
+    <div id="end-of-content" class="text-center mt-4 text-muted" style="display: none;">
+        <p>{% trans "Fin de la liste des événements." %}</p>
+    </div>
+
+</section>
+
+{# Section d'abonnement à la newsletter (exemple) #}
+<section class="newsletter-section">
+    <div class="container">
+        <h2 class="section-title text-white">{% trans "Restez informé des événements de santé numérique au Tchad" %}</h2>
+        <p class="lead">{% trans "Abonnez-vous à notre newsletter pour ne rien manquer !" %}</p>
+        <div class="d-flex justify-content-center">
+            <form action="#" method="post" class="w-100" style="max-width: 500px;">
+                {% csrf_token %}
+                <div class="form-group d-flex justify-content-center">
+                    <input type="email" name="email" class="form-control me-2" placeholder="{% trans 'Votre adresse email' %}" required>
+                    <button type="submit" class="btn btn-primary">
+                        {% trans "S'abonner" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'js/events.js' %}"></script>
+<script>
+    // Configuration multilingue
+    // Ces traductions seront utilisées par events.js
+    const translations = {
+        'fr': {
+            'noEventsFound': '{% trans "Aucun événement trouvé" %}',
+            'loadingEvents': '{% trans "Chargement des événements..." %}',
+            'errorLoadingEvents': '{% trans "Erreur lors du chargement des événements" %}'
+        },
+        'en': {
+            'noEventsFound': 'No events found',
+            'loadingEvents': 'Loading events...',
+            'errorLoadingEvents': 'Error loading events'
+        },
+        'ar': {
+            'noEventsFound': 'لم يتم العثور على أحداث',
+            'loadingEvents': 'تحميل الأحداث...',
+            'errorLoadingEvents': 'خطأ في تحميل الأحداث'
+        }
+    };
+    
+    // Initialisation des filtres d'événements et du défilement infini
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeEventFilters(translations['{{ LANGUAGE_CODE }}']);
+        initializeInfiniteScroll(translations['{{ LANGUAGE_CODE }}']);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,19 @@
+body {
+    font-family: Arial, sans-serif;
+}
+.navbar-brand {
+    font-weight: bold;
+}
+.event-card {
+    transition: transform 0.2s;
+}
+.event-card:hover {
+    transform: translateY(-5px);
+}
+.card-img-top {
+    max-height: 200px;
+    object-fit: cover;
+}
+.alert-dismissible .btn-close {
+    padding: 0.75rem 1.25rem;
+}

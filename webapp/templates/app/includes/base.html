@@ -1,0 +1,44 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy">
+    <title>{% block title %}{% trans "Santé Numérique Tchad" %}{% endblock %}</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    {% block extra_css %}{% endblock %}
+    {% if LANGUAGE_CODE == 'ar' %}
+        <link rel="stylesheet" href="{% static 'styles/rtl.css' %}">
+    {% endif %}
+    
+</head>
+
+
+<body>
+    <!-- Preloader -->
+    {% include "./preloader.html" %}
+
+    <!-- Navbar -->
+    {% include "./navbar.html" %}
+
+    <!-- Contenu principal -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include "./footer.html" %}
+
+
+    <!-- Scripts -->
+    <script src="{% static 'script/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+    <script src="https://static.elfsight.com/platform/platform.js" async></script>
+    <div class="elfsight-app-8c56164a-713a-4879-aedc-191ac400b47f" data-elfsight-app-lazy></div>
+</body>
+</html>

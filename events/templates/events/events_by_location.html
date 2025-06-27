@@ -1,0 +1,59 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Événements à" %} {{ city_name }} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "Événements à" %} {{ city_name }}</h1>
+    <p>{% trans "Total :" %} {{ total_events }} {% trans "événements" %}</p>
+    <div class="row">
+        {% for event in events %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if event.featured_image %}
+                <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="card-text">{{ event.description|truncatewords:20 }}</p>
+                    <p>
+                        <strong>{% trans "Date :" %}</strong> {{ event.start_date|date:"d M Y" }}<br>
+                        <strong>{% trans "Catégorie :" %}</strong> {{ event.category.name }}
+                    </p>
+                    <a href="{% url 'events:event_detail' slug=event.slug %}" class="btn btn-outline-primary">{% trans "Voir détails" %}</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>{% trans "Aucun événement dans cette ville." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Précédent" %}</a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Suivant" %}</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

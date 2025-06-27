@@ -1,0 +1,15 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Contact" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "Nous contacter" %}</h1>
+    <p>{% trans "Pour toute question, veuillez nous contacter à l'adresse suivante :" %}</p>
+    <p><strong>Email :</strong> contact@santenumerique.td</p>
+    <p><strong>Téléphone :</strong> +235 1234 5678</p>
+    <p><strong>Adresse :</strong> N'Djaména, Tchad</p>
+</div>
+{% endblock %}

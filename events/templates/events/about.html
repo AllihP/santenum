@@ -1,0 +1,13 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "À propos" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "À propos de Santé Numérique Tchad" %}</h1>
+    <p>{% trans "Santé Numérique Tchad est une initiative visant à transformer le secteur de la santé au Tchad grâce à des solutions numériques. Nous organisons des formations, ateliers et conférences pour promouvoir l'innovation et l'accès aux soins." %}</p>
+    <p>{% trans "Rejoignez-nous pour participer à nos événements et contribuer à un avenir plus sain." %}</p>
+</div>
+{% endblock %}
