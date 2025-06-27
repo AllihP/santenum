@@ -1,0 +1,102 @@
+name: CI/CD Pipeline for Django App
+
+on:
+  push:
+    branches:
+      - master # Trigger on push to master branch
+  pull_request:
+    branches:
+      - master # Trigger on pull request to main branch
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Use a fresh Ubuntu VM for this job
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Action to checkout your repository code
+
+      - name: Set up Docker Buildx (for multi-platform builds, optional)
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker images
+        run: docker-compose build
+
+      - name: Run Django migrations and tests
+        run: |
+          docker-compose up -d mysql_db # Start DB first
+          # Wait for DB to be healthy (consider a proper wait-for-it script for robustness)
+          echo "Waiting for MySQL to be ready..."
+          for i in `seq 1 10`; do
+            docker-compose exec mysql_db mysqladmin ping -h localhost -uroot -pAmmi/123@ && break
+            sleep 3
+          done
+          docker-compose up -d web nginx # Start web and nginx
+          echo "Waiting for web and nginx to be ready..."
+          sleep 10 # Simple wait, replace with health checks if possible
+          
+          echo "Running Django migrations..."
+          docker-compose exec web python manage.py migrate --noinput
+          
+          echo "Collecting static files..."
+          docker-compose exec web python manage.py collectstatic --noinput
+          
+          echo "Running Django tests..."
+          # IMPORTANT: Make sure you have actual tests in your Django app
+          docker-compose exec web python manage.py test
+        env: # Pass environment variables needed by Django tests if any
+          DJANGO_DB_NAME: santenumerique_db
+          DJANGO_DB_USER: root
+          DJANGO_DB_PASSWORD: Ammi/123@
+          DJANGO_DB_HOST: mysql_db
+          DJANGO_DB_PORT: 3306
+          DJANGO_DEBUG: 'False' # Ensure DEBUG is False for production-like tests
+
+      - name: Clean up test containers
+        if: always() # Run this step even if previous steps fail
+        run: docker-compose down -v
+
+      - name: Log in to Docker Hub (or your chosen container registry)
+        if: github.ref == 'refs/heads/master' # Only log in on pushes to master
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} # Stored in GitHub Secrets
+          password: ${{ secrets.DOCKER_PASSWORD }} # Stored in GitHub Secrets
+
+      - name: Push Docker images
+        if: github.ref == 'refs/heads/master' # Only push on pushes to master
+        run: |
+          # Tag and push your 'web' image
+          docker tag santenumerique_web:latest ${{ secrets.DOCKER_USERNAME }}/santenumerique_web:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/santenumerique_web:${{ github.sha }}
+          # Tag and push your 'nginx' image if it's custom and needs pushing
+          # docker tag santenumerique_nginx:latest ${{ secrets.DOCKER_USERNAME }}/santenumerique_nginx:${{ github.sha }}
+          # docker push ${{ secrets.DOCKER_USERNAME }}/santenumerique_nginx:${{ github.sha }}
+
+  deploy:
+    needs: build-and-test # This job depends on the success of build-and-test
+    runs-on: ubuntu-latest
+    environment:
+      name: production # Good practice to define deployment environments
+    if: github.ref == 'refs/heads/main' # Only deploy if the push is to the 'main' branch
+
+    steps:
+      - name: Deploy to production server via SSH
+        uses: appleboy/ssh-action@v1.0.0 # Use a reliable SSH action
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Navigate to your project directory on the remote server
+            cd /path/to/your/santenumerique/project
+            # Pull the latest images
+            docker-compose pull
+            # Bring up the new containers and remove old ones
+            docker-compose up -d --remove-orphans
+            # Run migrations on the production container
+            docker-compose exec web python manage.py migrate --noinput
+            # Collect static files on the production container
+            docker-compose exec web python manage.py collectstatic --noinput
+            # Restart the web service to ensure new code/static files are used
+            docker-compose restart web
