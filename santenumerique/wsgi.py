@@ -14,3 +14,5 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'santenumerique.settings')
 
 application = get_wsgi_application()
+
+python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn santenumerique.wsgi:application --bind 0.0.0.0:$PORT
