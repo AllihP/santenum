@@ -122,7 +122,7 @@ DATABASES = {
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.parse(postgresql://hillaprince:n5xjsgXwJ46GYDqIJveV8AH4eoNoWyXI@dpg-d1g0io3ipnbc73a5cjdg-a/santenumerique, conn_max_age=600)
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
     # S'assurer que le moteur est PostgreSQL (au cas où dj_database_url ne le déduirait pas toujours)
     DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
