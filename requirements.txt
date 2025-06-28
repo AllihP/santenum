@@ -7,9 +7,6 @@ flake8==7.3.0
 gunicorn==23.0.0
 h11==0.16.0
 mccabe==0.7.0
-mysql==0.0.3
-mysql-connector==2.2.9
-mysql-connector-python==9.3.0
 psycopg2-binary
 packaging==25.0
 pillow==11.2.1
