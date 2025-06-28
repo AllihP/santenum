@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import dj_database_url
 import sys
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
@@ -109,17 +110,20 @@ AUTH_USER_MODEL = 'elearning.Utilisateur'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DJANGO_DB_NAME'),
-        'USER': os.getenv('DJANGO_DB_USER'),
-        'PASSWORD': os.getenv('DJANGO_DB_PASSWORD'),
-        'HOST': os.getenv('DJANGO_DB_HOST', 'db'), # 'db' est le nom du service dans docker-compose.yml
-        'PORT': os.getenv('DJANGO_DB_PORT', '3306'),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", # Recommandé pour MySQL
-        }
+        'ENGINE': 'django.db.backends.postgresql', # Changer de mysql.backends en postgresql
+        'NAME': os.environ.get('DJANGO_DB_NAME'),
+        'USER': os.environ.get('DJANGO_DB_USER'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD'),
+        'HOST': os.environ.get('DJANGO_DB_HOST'),
+        'PORT': os.environ.get('DJANGO_DB_PORT'),
     }
 }
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    # S'assurer que le moteur est PostgreSQL
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 
 
 
