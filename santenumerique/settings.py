@@ -49,9 +49,12 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 # For local development, you can use localhost and
 
 
-ALLOWED_HOSTS = ['www.santenumeriquetchad.td','localhost', '127.0.0.1']
-if DEBUG:
-    ALLOWED_HOSTS += ['0.0.0.0'] #Pour la production
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+# For Render deployments
+render_external_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if render_external_hostname:
+    ALLOWED_HOSTS.append(render_external_hostname)
 
 
 # Application definition
