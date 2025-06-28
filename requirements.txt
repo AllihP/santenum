@@ -18,3 +18,4 @@ tzdata==2025.2
 uvicorn==0.34.3
 python-dotenv
 gunicorn
+dj-database-url
