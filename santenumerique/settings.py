@@ -57,6 +57,16 @@ if render_external_hostname:
     ALLOWED_HOSTS.append(render_external_hostname)
 
 
+# WhiteNoise settings
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -185,7 +195,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+STATICFILES_DIRS = []
 
 # Ensure this is included for static file discovery
 STATICFILES_FINDERS = [
