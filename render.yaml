@@ -1,0 +1,31 @@
+# render.yaml
+services:
+  - type: web
+    name: santenumerique
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "bash entrypoint.sh"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: santenumerique-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true # Render will generate a strong secret key for you
+      - key: WEB_CONCURRENCY
+        value: 4 # Adjust based on your plan and expected traffic
+      - key: PYTHON_VERSION
+        value: 3.13.4 # Match the Python version you want to use
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false # Do not sync from Git for sensitive data
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false # Do not sync from Git for sensitive data
+    # Commands to run AFTER the service is deployed and running
+    # This is excellent for migrations and superuser creation
+    postDeployCommands:
+      - python manage.py migrate --noinput
+      - python create_superuser.py
+
+  - type: postgres
+    name: santenumerique-db
+    plan: free # Or 'standard' or 'pro' depending on your needs
