@@ -20,7 +20,7 @@ load_dotenv(os.path.join(BASE_DIR, '.env')) # Chemin corrigé pour .env
 # SECRET_KEY: Clé secrète utilisée par Django. NE DOIT JAMAIS ÊTRE EXPOSÉE EN PRODUCTION.
 # Utilisez une variable d'environnement 'DJANGO_SECRET_KEY'.
 # La valeur par défaut ne doit être utilisée qu'en développement.
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'votre-cle-secrete-par-defaut-pour-le-developpement-uniquement-et-non-securisee')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'Am-mi/1324576890#')
 
 # DEBUG: Active/désactive le mode débogage de Django. DOIT ÊTRE FALSE EN PRODUCTION.
 # Utilisé pour basculer entre développement et production.
@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 # En mode débogage, autorise l'accès local.
 if DEBUG:
     ALLOWED_HOSTS.append('127.0.0.1')
-    ALLOWED_HOSTS.append('localhost')
+    ALLOWED_HOSTS.append('santenumerique.onrender.com')
 else:
     # En production, récupère les hôtes autorisés depuis 'DJANGO_ALLOWED_HOSTS'.
     # Les domaines doivent être séparés par des virgules, ex: "example.com,www.example.com"
@@ -114,7 +114,7 @@ AUTH_USER_MODEL = 'elearning.Utilisateur'
 
 # Utilise DATABASE_URL pour la production (Render, Heroku, etc.)
 # Fallback sur SQLite pour le développement local si DATABASE_URL n'est pas défini.
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.environ.get('postgresql://hillaprince:n5xjsgXwJ46GYDqIJveV8AH4eoNoWyXI@dpg-d1g0io3ipnbc73a5cjdg-a.oregon-postgres.render.com/santenumerique')
 
 if DATABASE_URL:
     DATABASES = {
