@@ -5,115 +5,91 @@ import sys
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
 
+# --- Configuration de base du projet ---
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Détermine le chemin de base de votre projet.
+# Si settings.py est dans 'santenumerique/', BASE_DIR sera le répertoire parent de 'santenumerique/'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Load environment variables
-load_dotenv(os.path.join(Path(__file__).resolve().parent.parent, '.env'))
 
-# --- AJOUTEZ CES LIGNES POUR LE DÉBOGAGE ---
-#print(f"DEBUG: DJANGO_DB_USER={os.getenv('DJANGO_DB_USER')}")
-#print(f"DEBUG: DJANGO_DB_PASSWORD={os.getenv('DJANGO_DB_PASSWORD')}")
-#print(f"DEBUG: DJANGO_DB_HOST={os.getenv('DJANGO_DB_HOST')}")
-#print(f"DEBUG: DJANGO_DB_NAME={os.getenv('DJANGO_DB_NAME')}")
-# ------------------------------------------
+# Charge les variables d'environnement depuis le fichier .env
+# Assurez-vous que .env est à la racine de votre projet (un niveau au-dessus du dossier santenumerique qui contient settings.py).
+load_dotenv(os.path.join(BASE_DIR, '.env')) # Chemin corrigé pour .env
 
+# --- Paramètres de sécurité et de débogage ---
 
+# SECRET_KEY: Clé secrète utilisée par Django. NE DOIT JAMAIS ÊTRE EXPOSÉE EN PRODUCTION.
+# Utilisez une variable d'environnement 'DJANGO_SECRET_KEY'.
+# La valeur par défaut ne doit être utilisée qu'en développement.
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'votre-cle-secrete-par-defaut-pour-le-developpement-uniquement-et-non-securisee')
 
+# DEBUG: Active/désactive le mode débogage de Django. DOIT ÊTRE FALSE EN PRODUCTION.
+# Utilisé pour basculer entre développement et production.
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true' # Utilise .lower() pour une meilleure robustesse
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        '': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# ALLOWED_HOSTS: Liste des noms de domaine que cette installation Django peut servir.
+# Crucial pour la sécurité en production.
+ALLOWED_HOSTS = []
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default-insecure-secret-key-for-dev-only')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
-
-# ALLOWED_HOSTS should be set to the domain names your site will be served from
+# En mode débogage, autorise l'accès local.
 if DEBUG:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    ALLOWED_HOSTS.append('127.0.0.1')
+    ALLOWED_HOSTS.append('localhost')
 else:
-    # In production, get ALLOWED_HOSTS from an environment variable
-    # This variable should be a comma-separated string, e.g., "santenumerique.onrender.com,your-custom-domain.com"
-    ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
-    # Add the Render external hostname if it exists, as a fallback or additional entry
+    # En production, récupère les hôtes autorisés depuis 'DJANGO_ALLOWED_HOSTS'.
+    # Les domaines doivent être séparés par des virgules, ex: "example.com,www.example.com"
+    allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS')
+    if allowed_hosts_env:
+        ALLOWED_HOSTS.extend([h.strip() for h in allowed_hosts_env.split(',') if h.strip()])
+
+    # Ajoute l'hostname externe de Render si disponible.
     render_external_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
     if render_external_hostname and render_external_hostname not in ALLOWED_HOSTS:
         ALLOWED_HOSTS.append(render_external_hostname)
 
-# Ensure the list does not contain empty strings from split()
-ALLOWED_HOSTS = [host for host in ALLOWED_HOSTS if host]
-
-
-
-
-render_external_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if render_external_hostname:
-    ALLOWED_HOSTS.append(render_external_hostname)
-
-
-# WhiteNoise settings
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
-# Application definition
+# --- Définition des applications ---
 
 INSTALLED_APPS = [
+    # Applications intégrées de Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', # Nécessaire pour servir les fichiers statiques
+
+    # Vos applications
     'webapp',
     'events',
     'candidature',
     'elearning',
 ]
 
+# --- Middlewares ---
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Pour servir les fichiers statiques en production
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # Pour le support des langues
+    'django.middleware.locale.LocaleMiddleware',  # Pour la gestion des langues
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
+# --- URL Configuration ---
+
 ROOT_URLCONF = 'santenumerique.urls'
+
+# --- Configuration des Templates ---
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        # DIRS: Liste des répertoires où Django cherchera des templates en plus des répertoires d'applications.
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], # Chemin corrigé
+        'APP_DIRS': True, # Permet à Django de chercher des templates dans les dossiers 'templates/' de chaque app
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -125,61 +101,35 @@ TEMPLATES = [
     },
 ]
 
+# --- WSGI & ASGI Applications ---
+
 WSGI_APPLICATION = 'santenumerique.wsgi.application'
-ASGI_APPLICATION = 'santenumerique.asgi.application'
+ASGI_APPLICATION = 'santenumerique.asgi.application' # Si vous utilisez ASGI (pour websockets par exemple)
+
+# --- Modèle utilisateur personnalisé ---
 
 AUTH_USER_MODEL = 'elearning.Utilisateur'
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# --- Configuration de la Base de Données ---
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql', # Changer de mysql.backends en postgresql
-#        'NAME': os.environ.get('DJANGO_DB_NAME'),
-#        'USER': os.environ.get('DJANGO_DB_USER'),
-#        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD'),
-#        'HOST': os.environ.get('DJANGO_DB_HOST'),
-#        'PORT': os.environ.get('DJANGO_DB_PORT'),
-#    }
-#}
-
+# Utilise DATABASE_URL pour la production (Render, Heroku, etc.)
+# Fallback sur SQLite pour le développement local si DATABASE_URL n'est pas défini.
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
-    # Production configuration (Render) using DATABASE_URL
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
-    # Ensure it's explicitly set to postgresql if needed, though dj_database_url usually handles this
-    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
+    # dj_database_url.parse détecte l'engine, pas besoin de le forcer.
 else:
-    # Local development configuration
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3', # For local SQLite
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), # Chemin corrigé
         }
     }
 
-LANGUAGE_CODE = 'fr'  # Langue par défaut de votre projet
-
-LANGUAGES = [ # Langues supportées par votre site
-    ('fr', _('French')),
-    ('en', _('English')),
-    ('ar', _('Arabic')),
-]
-
-TIME_ZONE = 'Africa/Ndjamena'
-USE_I18N = True
-USE_TZ = True
-
-# Configuration upload fichiers
-MEDIA_URL = '/media/'
-MEDIA_ROOT = '/vol/media/'
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# --- Validation des mots de passe ---
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -196,61 +146,118 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# --- Internationalisation et Localisation (I18N & L10N) ---
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+# Définition de la langue par défaut du site.
+LANGUAGE_CODE = 'fr'
 
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # This is where collectstatic will put files
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'santenumerique', 'styles'), # Check this path carefully
-    # Add other directories if you have static files outside of app-specific 'static/' folders
+# Liste des langues supportées par votre application.
+# La fonction _() est utilisée pour marquer les chaînes comme traduisibles.
+LANGUAGES = [
+    ('fr', _('French')),
+    ('en', _('English')),
+    ('ar', _('Arabic')),
 ]
 
-# Optional: Add the WhiteNoise storage if you're using it (which you seem to be based on logs)
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Fuseau horaire du site.
+TIME_ZONE = 'Africa/Ndjamena'
 
+USE_I18N = True # Active le système de traduction de Django
+USE_TZ = True   # Active le support des fuseaux horaires (recommandé)
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+# --- Fichiers Statiques (CSS, JS, Images) et Fichiers Média (Uploads Utilisateurs) ---
+
+# STATIC_URL: URL de base pour les fichiers statiques.
+STATIC_URL = '/static/'
+
+# STATIC_ROOT: Chemin absolu où 'collectstatic' rassemblera tous les fichiers statiques pour la production.
+# WhiteNoise servira les fichiers depuis ce répertoire.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# STATICFILES_DIRS: Liste des répertoires où Django doit chercher des fichiers statiques
+# en plus des répertoires 'static/' des applications.
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'santenumerique', 'static'), # Chemin corrigé: il est plus courant d'avoir un dossier 'static' dans l'app principale
+                                                      # ou un dossier 'static' à la racine du projet.
+                                                      # Si 'styles.css' est directement sous 'santenumerique/styles/',
+                                                      # alors: os.path.join(BASE_DIR, 'santenumerique', 'styles') est correct.
+                                                      # Vérifiez la structure réelle de votre dossier 'styles'.
+]
+
+# STORAGES: Configuration des backends de stockage.
+# "default" est pour les fichiers média.
+# "staticfiles" est pour les fichiers statiques, en utilisant WhiteNoise pour la compression et le cache.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# MEDIA_URL: URL publique pour les fichiers médias uploadés par les utilisateurs.
+MEDIA_URL = '/media/'
+
+# MEDIA_ROOT: Chemin absolu où les fichiers médias uploadés seront stockés.
+# Pour la production sur Render, il est fortement recommandé d'utiliser un stockage d'objets (S3, GCS)
+# avec django-storages pour la persistance et la scalabilité.
+# Si vous n'utilisez pas de stockage d'objets, sachez que les fichiers sur le système de fichiers de Render
+# ne sont PAS persistants entre les déploiements ou les redémarrages d'instances.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Chemin par défaut pour le développement.
+                                            # Changez ceci si vous utilisez un service de stockage cloud.
+
+# --- Configuration du type de champ de clé primaire par défaut ---
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# settings.py
-LANGUAGES = [
-    ('fr', 'Français'),
-    ('en', 'English'),
-    ('ar', 'العربية'),
-]
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
+# --- URLs de connexion/déconnexion ---
 
-LANGUAGE_CODE = 'fr'  # Langue par défaut
+LOGIN_URL = '/accounts/login/'        # Page de connexion personnalisée (si elle existe)
+LOGIN_REDIRECT_URL = '/elearning/profile/' # Redirection après connexion réussie
+LOGOUT_REDIRECT_URL = '/'             # Redirection après déconnexion
 
+# --- Configuration spécifique pour les tests ---
 
+# Ces paramètres sont activés lorsque la commande 'test' est exécutée.
 if 'test' in sys.argv:
-    # Configuration pour les tests
+    # Utilise un backend email en mémoire pour éviter d'envoyer de vrais emails pendant les tests.
     EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-    MEDIA_ROOT = '/tmp/test_media/'
+    # Utilise un répertoire temporaire pour les fichiers média lors des tests.
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'test_media_temp') # Chemin corrigé
+    # Assurez-vous que ce répertoire est nettoyé après les tests si nécessaire.
 
+# --- Configuration du Logging (Journalisation) ---
 
-
-
-
-LOGIN_URL = '/login/'
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/elearning/profile/'
-
-
-if 'test' in sys.argv:
-    # Configuration pour les tests (à conserver si vous avez des tests)
-    EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-    MEDIA_ROOT = '/tmp/test_media/'  # Répertoire temporaire pour les médias lors des tests
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose', # Utilisation d'un formatter défini ci-dessous
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'loggers': {
+        '': { # Logger racine, capture tous les messages
+            'handlers': ['console'],
+            'level': 'INFO' if not DEBUG else 'DEBUG', # INFO en production, DEBUG en développement
+            'propagate': True,
+        },
+        'django': { # Logger spécifique à Django
+            'handlers': ['console'],
+            'level': 'INFO' if not DEBUG else 'DEBUG',
+            'propagate': False, # Ne propage pas au logger racine pour éviter les doublons
+        },
+    },
+}
