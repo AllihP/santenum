@@ -45,7 +45,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default-insecure-secret-key-for-dev
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
-# ALLOWED_HOSTS should be set to the domain names your site will be served from
+ALLOWED_HOSTS should be set to the domain names your site will be served from
 # For local development, you can use localhost and
 
 
