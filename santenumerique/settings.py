@@ -205,16 +205,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),
-                   ]
+
+# THIS IS THE CRITICAL PART:
+# Ensure this path correctly points to your top-level static files
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'santenumerique', 'styles'), # Adjust if styles is directly under santenumerique/
+]
 
 # Ensure this is included for static file discovery
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-]
+#STATICFILES_FINDERS = [
+#    'django.contrib.staticfiles.finders.FileSystemFinder',
+#    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#]
 
 
 # Default primary key field type
