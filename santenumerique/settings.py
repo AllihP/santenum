@@ -45,13 +45,24 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default-insecure-secret-key-for-dev
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS should be set to the domain names your site will be served from
-# For local development, you can use localhost and
+# ALLOWED_HOSTS should be set to the domain names your site will be served from
+if DEBUG:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+else:
+    # In production, get ALLOWED_HOSTS from an environment variable
+    # This variable should be a comma-separated string, e.g., "santenumerique.onrender.com,your-custom-domain.com"
+    ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
+    # Add the Render external hostname if it exists, as a fallback or additional entry
+    render_external_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+    if render_external_hostname and render_external_hostname not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(render_external_hostname)
+
+# Ensure the list does not contain empty strings from split()
+ALLOWED_HOSTS = [host for host in ALLOWED_HOSTS if host]
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-# For Render deployments
+
 render_external_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if render_external_hostname:
     ALLOWED_HOSTS.append(render_external_hostname)
@@ -122,30 +133,31 @@ AUTH_USER_MODEL = 'elearning.Utilisateur'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql', # Changer de mysql.backends en postgresql
-        'NAME': os.environ.get('DJANGO_DB_NAME'),
-        'USER': os.environ.get('DJANGO_DB_USER'),
-        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD'),
-        'HOST': os.environ.get('DJANGO_DB_HOST'),
-        'PORT': os.environ.get('DJANGO_DB_PORT'),
-    }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql', # Changer de mysql.backends en postgresql
+#        'NAME': os.environ.get('DJANGO_DB_NAME'),
+#        'USER': os.environ.get('DJANGO_DB_USER'),
+#        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD'),
+#        'HOST': os.environ.get('DJANGO_DB_HOST'),
+#        'PORT': os.environ.get('DJANGO_DB_PORT'),
+#    }
+#}
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
+
 if DATABASE_URL:
-    # Configuration pour la production (Render)
+    # Production configuration (Render) using DATABASE_URL
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
-    # C'EST ICI QUE VOUS DÉFINISSEZ LE MOTEUR POUR LA BASE DE DONNÉES DE PRODUCTION
+    # Ensure it's explicitly set to postgresql if needed, though dj_database_url usually handles this
     DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 else:
-    # Configuration pour le développement local
+    # Local development configuration
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3', # Ou 'django.db.backends.postgresql' pour du local
+            'ENGINE': 'django.db.backends.sqlite3', # For local SQLite
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
@@ -195,13 +207,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-#STATICFILES_DIRS = []
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),
+                   ]
 
 # Ensure this is included for static file discovery
-#STATICFILES_FINDERS = [
-#    'django.contrib.staticfiles.finders.FileSystemFinder',
-#    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#]
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 
 # Default primary key field type
