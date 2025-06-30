@@ -169,20 +169,27 @@ USE_TZ = True   # Active le support des fuseaux horaires (recommandé)
 
 # STATIC_URL: URL de base pour les fichiers statiques.
 STATIC_URL = '/static/'
+# In santenumerique/settings.py
 
-# STATIC_ROOT: Chemin absolu où 'collectstatic' rassemblera tous les fichiers statiques pour la production.
-# WhiteNoise servira les fichiers depuis ce répertoire.
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# STATICFILES_DIRS: Liste des répertoires où Django doit chercher des fichiers statiques
-# en plus des répertoires 'static/' des applications.
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'santenumerique', 'static'), # Chemin corrigé: il est plus courant d'avoir un dossier 'static' dans l'app principale
-                                                      # ou un dossier 'static' à la racine du projet.
-                                                      # Si 'styles.css' est directement sous 'santenumerique/styles/',
-                                                      # alors: os.path.join(BASE_DIR, 'santenumerique', 'styles') est correct.
-                                                      # Vérifiez la structure réelle de votre dossier 'styles'.
+    # Option A: If your styles are directly in a 'static' folder in your main project app (e.g., santenumerique/static/styles/styles.css)
+    os.path.join(BASE_DIR, 'santenumerique', 'static'),
+
+    # Option B: If your styles are in a 'styles' folder directly under 'santenumerique' (e.g., santenumerique/styles/styles.css)
+    # os.path.join(BASE_DIR, 'santenumerique', 'styles'),
+
+    # Option C: If your styles are in a 'static' folder within the 'webapp' app (e.g., webapp/static/styles/styles.css)
+    # No need to add it here, Django finds app-specific 'static/' folders automatically.
+    # But if you *reference* it as 'styles/styles.css' in your template, and it's actually 'webapp/static/styles/styles.css',
+    # then the path in the template should be `{% static 'styles/styles.css' %}` IF `webapp` is in INSTALLED_APPS.
+    # The key is to know where `styles.css` is relative to your STATICFILES_DIRS or app static folders.
 ]
+
+# Ensure this is set for production with WhiteNoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # STORAGES: Configuration des backends de stockage.
 # "default" est pour les fichiers média.
