@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Load environment variables
 load_dotenv(os.path.join(Path(__file__).resolve().parent.parent, '.env'))
 
@@ -205,21 +205,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # This is where collectstatic will put files
 
-# THIS IS THE CRITICAL PART:
-# Ensure this path correctly points to your top-level static files
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'santenumerique', 'styles'), # Adjust if styles is directly under santenumerique/
+    os.path.join(BASE_DIR, 'santenumerique', 'styles'), # Check this path carefully
+    # Add other directories if you have static files outside of app-specific 'static/' folders
 ]
 
-# Ensure this is included for static file discovery
-#STATICFILES_FINDERS = [
-#    'django.contrib.staticfiles.finders.FileSystemFinder',
-#    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#]
+# Optional: Add the WhiteNoise storage if you're using it (which you seem to be based on logs)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Default primary key field type
