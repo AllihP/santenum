@@ -1,102 +1,86 @@
-name: CI/CD Pipeline for Django App
+name: Django CI/CD Pipeline
 
 on:
   push:
     branches:
-      - master # Trigger on push to master branch
+      - master # Ou main, selon votre branche principale
   pull_request:
     branches:
-      - master # Trigger on pull request to main branch
+      - master # Ou main, pour exécuter les tests sur les PRs
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest # Use a fresh Ubuntu VM for this job
+  build_and_test:
+    runs-on: ubuntu-latest # Environnement d'exécution
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Action to checkout your repository code
+        uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx (for multi-platform builds, optional)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13' # Assurez-vous que c'est la même version que celle utilisée sur Render
+
+      - name: Set up Poetry
+        run: pip install poetry==2.1.3 # Assurez-vous que c'est la même version que celle utilisée sur Render
+
+      - name: Cache Poetry dependencies
+        id: cache-poetry
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Install dependencies with Poetry
+        run: poetry install --no-root # --no-root si votre projet n'est pas une librairie Python installable
+
+      - name: Create .env file for tests (if needed)
+        run: |
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
+          echo "DJANGO_DEBUG=True" >> .env # Debug True for local tests
+          # Ajoutez d'autres variables d'environnement nécessaires pour les tests si non-définies dans Django settings
+        # On this step, we're creating a .env file only for the CI environment for testing.
+        # This .env file should NOT be committed to your repository.
+
+      - name: Run Django Tests
+        run: python manage.py test # Exécute tous les tests Django
+
+      - name: Configure Docker Buildx (Optional, but recommended for better Docker builds)
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker images
-        run: docker-compose build
-
-      - name: Run Django migrations and tests
-        run: |
-          docker-compose up -d mysql_db # Start DB first
-          # Wait for DB to be healthy (consider a proper wait-for-it script for robustness)
-          echo "Waiting for MySQL to be ready..."
-          for i in `seq 1 10`; do
-            docker-compose exec mysql_db mysqladmin ping -h localhost -uroot -pAmmi/123@ && break
-            sleep 3
-          done
-          docker-compose up -d web nginx # Start web and nginx
-          echo "Waiting for web and nginx to be ready..."
-          sleep 10 # Simple wait, replace with health checks if possible
-          
-          echo "Running Django migrations..."
-          docker-compose exec web python manage.py migrate --noinput
-          
-          echo "Collecting static files..."
-          docker-compose exec web python manage.py collectstatic --noinput
-          
-          echo "Running Django tests..."
-          # IMPORTANT: Make sure you have actual tests in your Django app
-          docker-compose exec web python manage.py test
-        env: # Pass environment variables needed by Django tests if any
-          DJANGO_DB_NAME: santenumerique_db
-          DJANGO_DB_USER: root
-          DJANGO_DB_PASSWORD: Ammi/123@
-          DJANGO_DB_HOST: mysql_db
-          DJANGO_DB_PORT: 3306
-          DJANGO_DEBUG: 'False' # Ensure DEBUG is False for production-like tests
-
-      - name: Clean up test containers
-        if: always() # Run this step even if previous steps fail
-        run: docker-compose down -v
-
-      - name: Log in to Docker Hub (or your chosen container registry)
-        if: github.ref == 'refs/heads/master' # Only log in on pushes to master
+      - name: Log in to Docker Hub (if pushing images)
+        if: github.ref == 'refs/heads/master' # Exécuter uniquement sur la branche principale
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }} # Stored in GitHub Secrets
-          password: ${{ secrets.DOCKER_PASSWORD }} # Stored in GitHub Secrets
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Push Docker images
-        if: github.ref == 'refs/heads/master' # Only push on pushes to master
-        run: |
-          # Tag and push your 'web' image
-          docker tag santenumerique_web:latest ${{ secrets.DOCKER_USERNAME }}/santenumerique_web:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/santenumerique_web:${{ github.sha }}
-          # Tag and push your 'nginx' image if it's custom and needs pushing
-          # docker tag santenumerique_nginx:latest ${{ secrets.DOCKER_USERNAME }}/santenumerique_nginx:${{ github.sha }}
-          # docker push ${{ secrets.DOCKER_USERNAME }}/santenumerique_nginx:${{ github.sha }}
+      - name: Build and push Docker image
+        if: github.ref == 'refs/heads/master' # Exécuter uniquement sur la branche principale
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true # Pousse l'image vers le registre (Docker Hub dans cet exemple)
+          tags: your-dockerhub-username/your-repo-name:latest # Remplacez par votre nom d'utilisateur Docker Hub et nom de dépôt
+          cache-from: type=gha # Utilise le cache de GitHub Actions pour les couches Docker
+          cache-to: type=gha,mode=max
 
   deploy:
-    needs: build-and-test # This job depends on the success of build-and-test
+    needs: build_and_test # Cette tâche dépend du succès de la tâche 'build_and_test'
     runs-on: ubuntu-latest
-    environment:
-      name: production # Good practice to define deployment environments
-    if: github.ref == 'refs/heads/main' # Only deploy if the push is to the 'main' branch
+    if: github.ref == 'refs/heads/master' # Déployer uniquement lorsque la branche principale est mise à jour
 
     steps:
-      - name: Deploy to production server via SSH
-        uses: appleboy/ssh-action@v1.0.0 # Use a reliable SSH action
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # Navigate to your project directory on the remote server
-            cd /path/to/your/santenumerique/project
-            # Pull the latest images
-            docker-compose pull
-            # Bring up the new containers and remove old ones
-            docker-compose up -d --remove-orphans
-            # Run migrations on the production container
-            docker-compose exec web python manage.py migrate --noinput
-            # Collect static files on the production container
-            docker-compose exec web python manage.py collectstatic --noinput
-            # Restart the web service to ensure new code/static files are used
-            docker-compose restart web
+      - name: Trigger Render Deploy Hook (Recommended for Render)
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret not set. Skipping Render deployment trigger."
+            exit 0
+          fi
+          echo "Triggering Render deployment..."
+          curl "$RENDER_DEPLOY_HOOK_URL" -X POST
+          echo "Render deployment triggered successfully."
