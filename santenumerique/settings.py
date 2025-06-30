@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 # Détermine le chemin de base de votre projet.
 # Si settings.py est dans 'santenumerique/', BASE_DIR sera le répertoire parent de 'santenumerique/'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Charge les variables d'environnement depuis le fichier .env
 # Assurez-vous que .env est à la racine de votre projet (un niveau au-dessus du dossier santenumerique qui contient settings.py).
@@ -172,24 +172,29 @@ STATIC_URL = '/static/'
 # In santenumerique/settings.py
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # This is where collectstatic will put files
 
 STATICFILES_DIRS = [
-    # Option A: If your styles are directly in a 'static' folder in your main project app (e.g., santenumerique/static/styles/styles.css)
-    os.path.join(BASE_DIR, 'santenumerique', 'static'),
+    # Example 1: If 'styles.css' is in 'your_project_root/santenumerique/styles/styles.css'
+    # This means your 'styles' folder is directly under your main project folder.
+    os.path.join(BASE_DIR, 'santenumerique', 'styles'),
 
-    # Option B: If your styles are in a 'styles' folder directly under 'santenumerique' (e.g., santenumerique/styles/styles.css)
-    # os.path.join(BASE_DIR, 'santenumerique', 'styles'),
+    # Example 2: If 'styles.css' is in 'your_project_root/santenumerique/static/styles/styles.css'
+    # This means you have a 'static' folder directly under your main project folder.
+    # os.path.join(BASE_DIR, 'santenumerique', 'static'),
 
-    # Option C: If your styles are in a 'static' folder within the 'webapp' app (e.g., webapp/static/styles/styles.css)
-    # No need to add it here, Django finds app-specific 'static/' folders automatically.
-    # But if you *reference* it as 'styles/styles.css' in your template, and it's actually 'webapp/static/styles/styles.css',
-    # then the path in the template should be `{% static 'styles/styles.css' %}` IF `webapp` is in INSTALLED_APPS.
-    # The key is to know where `styles.css` is relative to your STATICFILES_DIRS or app static folders.
+    # Example 3: If 'styles.css' is in 'your_project_root/webapp/static/styles/styles.css'
+    # (Where 'webapp' is one of your Django apps listed in INSTALLED_APPS)
+    # In this case, you generally *don't* need to add webapp/static to STATICFILES_DIRS.
+    # Django automatically finds 'static/' folders within INSTALLED_APPS.
+    # However, if your reference is simply `{% static 'styles/styles.css' %}`
+    # and it's only in `webapp/static/`, then Django *should* find it.
+    # If it doesn't, it might mean your template path or your INSTALLED_APPS is off.
 ]
 
-# Ensure this is set for production with WhiteNoise
+# Ensure this is correctly configured for production with WhiteNoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # STORAGES: Configuration des backends de stockage.
 # "default" est pour les fichiers média.
