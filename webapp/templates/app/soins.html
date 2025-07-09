@@ -1,0 +1,406 @@
+{% extends './includes/base.html' %}
+{% load static %}
+
+{% block title %}Service de l'offre de soins et des services de santé{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/soins.css">
+
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Header -->
+
+
+<header class="hero-header" id="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="service-badge fade-in-up">
+            <span>Les services médicaux en 2025</span>
+        </div>
+        <h1 class="hero-title fade-in-up">Service de l'offre de soins et des services de santé</h1>
+        <p class="hero-subtitle fade-in-up">La santé accessible, notre mission essentielle!</p>
+    </div>
+    <div class="scroll-indicator">
+        <div class="scroll-arrow"></div>
+    </div>
+</header>
+
+<!-- Container principal -->
+<div class="main-container">
+    <!-- Colonne de gauche -->
+    <section class="content-section slide-in-left">
+        <!-- Navigation des services -->
+        <nav class="service-nav">
+            <a href="#coordination" class="nav-button" data-section="coordination">
+                <span class="nav-icon">🎯</span>
+                Coordination des activités
+            </a>
+            <a href="#gestion" class="nav-button" data-section="gestion">
+                <span class="nav-icon">🏗️</span>
+                Développement et gestion des infrastructures
+            </a>
+            <a href="#evaluation" class="nav-button" data-section="evaluation">
+                <span class="nav-icon">📊</span>
+                Évaluation des besoins en équipements médicaux
+            </a>
+            <a href="#selection" class="nav-button" data-section="selection">
+                <span class="nav-icon">✅</span>
+                Sélection et acquisition d'équipements
+            </a>
+            <a href="#mise" class="nav-button" data-section="mise">
+                <span class="nav-icon">⚙️</span>
+                Mise en place des solutions
+            </a>
+            <a href="#formation" class="nav-button" data-section="formation">
+                <span class="nav-icon">🎓</span>
+                Formation et soutien
+            </a>
+            <a href="#suivi" class="nav-button" data-section="suivi">
+                <span class="nav-icon">📈</span>
+                Suivi et évaluation
+            </a>
+            <a href="#travaux" class="nav-button" data-section="travaux">
+                <span class="nav-icon">🔬</span>
+                Travaux de recherches
+            </a>
+            <a href="#projets" class="nav-button" data-section="projets">
+                <span class="nav-icon">🚀</span>
+                Projets de l'année en cours
+            </a>
+        </nav>
+
+        <!-- Image principale -->
+        <div class="main-image-container">
+            <img src="{% static 'images/services-soins.jpg' %}" alt="Services de soins" class="main-image" loading="lazy">
+            <div class="image-overlay">
+                <div class="image-text">
+                    <h3>Innovation en Santé Numérique</h3>
+                    <p>Transforming healthcare through technology</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="description">
+            <div class="description-icon">💡</div>
+            <div class="description-content">
+                <h3>Notre Mission</h3>
+                <p>Le service de l'offre de soins et des services de santé contribue à la définition des objectifs stratégiques du programme national de santé numérique, en particulier en ce qui concerne l'amélioration de l'accès aux soins de santé et l'efficacité des services médicaux grâce aux technologies numériques.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="sidebar slide-in-right">
+        <div class="sidebar-header">
+            <h2>Services Connexes</h2>
+            <div class="sidebar-line"></div>
+        </div>
+        <div class="services-grid">
+            <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-card-inner">
+                    <div class="service-image-wrapper">
+                        <img src="{% static 'images/services-tic.png' %}" alt="Services TIC" class="service-image" loading="lazy">
+                        <div class="service-overlay">
+                            <span class="service-icon">💻</span>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3><a href="{% url 'webapp:technologie' %}">Service d'informatique, de nouvelle technologie, du matériel et des équipements</a></h3>
+                        <p class="service-tag">NTIC</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card-inner">
+                    <div class="service-image-wrapper">
+                        <img src="{% static 'images/suivi-evaluation.jpg' %}" alt="Suivi et évaluation" class="service-image" loading="lazy">
+                        <div class="service-overlay">
+                            <span class="service-icon">📊</span>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3><a href="{% url 'webapp:suivi' %}">Suivi et évaluation</a></h3>
+                        <p class="service-tag">Le PNSN 4</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-card-inner">
+                    <div class="service-image-wrapper">
+                        <img src="{% static 'images/services-applications.jpg' %}" alt="Services administratifs" class="service-image" loading="lazy">
+                        <div class="service-overlay">
+                            <span class="service-icon">📋</span>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3><a href="{% url 'webapp:administration' %}">Service administratif, de la formation et de perfectionnement</a></h3>
+                        <p class="service-tag">La hiérarchie et le développement personnel</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="service-card-inner">
+                    <div class="service-image-wrapper">
+                        <img src="{% static 'images/lab-acceleration.jpg' %}" alt="LAB d'accélération" class="service-image" loading="lazy">
+                        <div class="service-overlay">
+                            <span class="service-icon">⚡</span>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3><a href="{% url 'webapp:lab' %}">LAB d'accélération</a></h3>
+                        <p class="service-tag">L'équipe à l'œuvre jour et nuit</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="500">
+                <div class="service-card-inner">
+                    <div class="service-image-wrapper">
+                        <img src="{% static 'images/immersion-med-moderne.jpg' %}" alt="Immersion médecine moderne" class="service-image" loading="lazy">
+                        <div class="service-overlay">
+                            <span class="service-icon">🏥</span>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3><a href="{% url 'webapp:immersion' %}">Immersion en Med Moderne</a></h3>
+                        <p class="service-tag">La Télémédecine</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- Section Responsabilités -->
+<section class="responsibilities-section" id="responsibilities">
+    <div class="section-background"></div>
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Nos Responsabilités</h2>
+            <div class="section-subtitle">Excellence et innovation au service de la santé numérique</div>
+            <div class="title-line"></div>
+        </div>
+        <div class="responsibilities-grid">
+            <div class="responsibility-card reveal-card" id="coordination" data-aos="zoom-in" data-aos-delay="100">
+                <div class="card-number">01</div>
+                <div class="responsibility-header">
+                    <span class="responsibility-icon">🎯</span>
+                    Coordination des activités
+                </div>
+                <div class="responsibility-content">
+                    <p>Coordonne les efforts des différents acteurs impliqués dans la mise en œuvre du programme, y compris les institutions de santé, les partenaires gouvernementaux et non gouvernementaux, ainsi que les fournisseurs de solutions technologiques.</p>
+                </div>
+            </div>
+
+            <div class="responsibility-card reveal-card" id="gestion" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card-number">02</div>
+                <div class="responsibility-header">
+                    <span class="responsibility-icon">🏗️</span>
+                    Développement et gestion des infrastructures
+                </div>
+                <div class="responsibility-content">
+                    <p>Chargé de développer et de gérer les infrastructures technologiques nécessaires à la mise en œuvre du programme, telles que les systèmes d'information de santé, les réseaux de communication et les équipements médicaux numériques.</p>
+                </div>
+            </div>
+
+            <div class="responsibility-card reveal-card" id="evaluation" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card-number">03</div>
+                <div class="responsibility-header">
+                    <span class="responsibility-icon">📊</span>
+                    Évaluation des besoins en équipements médicaux
+                </div>
+                <div class="responsibility-content">
+                    <p>Évalue les besoins en équipements médicaux dans les établissements de santé du pays, en tenant compte des exigences spécifiques de la santé numérique et en veillant à ce que les équipements sélectionnés soient compatibles avec les systèmes d'information existants.</p>
+                </div>
+            </div>
+
+            <div class="responsibility-card reveal-card" id="selection" data-aos="zoom-in" data-aos-delay="400">
+                <div class="card-number">04</div>
+                <div class="responsibility-header">
+                    <span class="responsibility-icon">✅</span>
+                    Sélection et acquisition d'équipements
+                </div>
+                <div class="responsibility-content">
+                    <p>Responsable du processus de sélection, d'achat et de déploiement des équipements médicaux numériques, en veillant à ce qu'ils répondent aux normes de qualité et de sécurité requises.</p>
+                </div>
+            </div>
+
+            <div class="responsibility-card reveal-card" id="mise" data-aos="zoom-in" data-aos-delay="500">
+                <div class="card-number">05</div>
+                <div class="responsibility-header">
+                    <span class="responsibility-icon">⚙️</span>
+                    Mise en place des solutions
+                </div>
+                <div class="responsibility-content">
+                    <p>Supervise la mise en œuvre des solutions de santé numérique, telles que les dossiers médicaux électroniques, les systèmes de télémédecine, les applications de santé mobiles, etc. Il veille à ce que ces solutions soient accessibles, fiables et conformes aux normes de qualité et de sécurité.</p>
+                </div>
+            </div>
+
+            <div class="responsibility-card reveal-card" id="formation" data-aos="zoom-in" data-aos-delay="600">
+                <div class="card-number">06</div>
+                <div class="responsibility-header">
+                    <span class="responsibility-icon">🎓</span>
+                    Formation et soutien
+                </div>
+                <div class="responsibility-content">
+                    <p>Supervise la formation du personnel médical à l'utilisation des nouveaux équipements et des technologies de santé numérique, et fournit un soutien continu pour garantir une utilisation efficace et efficiente de ces outils.</p>
+                </div>
+            </div>
+
+            <div class="responsibility-card reveal-card" id="suivi" data-aos="zoom-in" data-aos-delay="700">
+                <div class="card-number">07</div>
+                <div class="responsibility-header">
+                    <span class="responsibility-icon">📈</span>
+                    Suivi et évaluation
+                </div>
+                <div class="responsibility-content">
+                    <p>Assure le suivi des performances des équipements et des systèmes numériques de santé existants, en collectant des données sur leur utilisation, leur fiabilité et leur impact sur la prestation des soins de santé, et en proposant des ajustements si nécessaire.</p>
+                </div>
+            </div>
+
+            <div class="responsibility-card reveal-card" data-aos="zoom-in" data-aos-delay="800">
+                <div class="card-number">08</div>
+                <div class="responsibility-header">
+                    <span class="responsibility-icon">📢</span>
+                    Formation et sensibilisation
+                </div>
+                <div class="responsibility-content">
+                    <p>Organise des sessions de formation et de sensibilisation pour les professionnels de la santé et les autres parties prenantes afin de garantir une utilisation efficace des technologies de santé numérique et une adoption généralisée.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Travaux de recherches -->
+<section class="research-section" id="travaux">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Travaux de recherches</h2>
+            <div class="section-subtitle">Innovation et recherche appliquée</div>
+            <div class="title-line"></div>
+        </div>
+        <div class="research-grid">
+            <div class="research-card reveal-card" data-aos="flip-left" data-aos-delay="100">
+                <div class="research-icon">🏥</div>
+                <h3>Santé communautaire</h3>
+                <p>Soins via Télémédecine</p>
+                <div class="research-progress">
+                    <div class="progress-bar" data-progress="85"></div>
+                </div>
+            </div>
+            <div class="research-card reveal-card" data-aos="flip-left" data-aos-delay="200">
+                <div class="research-icon">🗺️</div>
+                <h3>La cartographie</h3>
+                <div class="research-progress">
+                    <div class="progress-bar" data-progress="70"></div>
+                </div>
+            </div>
+            <div class="research-card reveal-card" data-aos="flip-left" data-aos-delay="300">
+                <div class="research-icon">🔒</div>
+                <h3>La sécurité des données médicales</h3>
+                <div class="research-progress">
+                    <div class="progress-bar" data-progress="90"></div>
+                </div>
+            </div>
+            <div class="research-card reveal-card" data-aos="flip-left" data-aos-delay="400">
+                <div class="research-icon">🌐</div>
+                <h3>L'interconnexion des districts sanitaires</h3>
+                <div class="research-progress">
+                    <div class="progress-bar" data-progress="60"></div>
+                </div>
+            </div>
+            <div class="research-card reveal-card" data-aos="flip-left" data-aos-delay="500">
+                <div class="research-icon">🔗</div>
+                <h3>Les Hub</h3>
+                <div class="research-progress">
+                    <div class="progress-bar" data-progress="75"></div>
+                </div>
+            </div>
+            <div class="research-card reveal-card" data-aos="flip-left" data-aos-delay="600">
+                <div class="research-icon">📱</div>
+                <h3>Les objets médicaux connectés</h3>
+                <p>Suivi en temps réel</p>
+                <div class="research-progress">
+                    <div class="progress-bar" data-progress="80"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Projets -->
+<section class="projects-section" id="projets">
+    <div class="projects-background"></div>
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Projets de l'année en cours</h2>
+            <div class="section-subtitle">Initiatives stratégiques 2025</div>
+            <div class="title-line"></div>
+        </div>
+        <div class="projects-timeline">
+            <div class="timeline-line"></div>
+            <div class="project-item reveal-card" data-aos="fade-right" data-aos-delay="100">
+                <div class="project-number">01</div>
+                <div class="project-content">
+                    <div class="project-icon">📱</div>
+                    <h3>Déploiement de tablettes connectées</h3>
+                    <p>Dans 50 centres de santé pilotes</p>
+                    <div class="project-status">En cours</div>
+                </div>
+            </div>
+            <div class="project-item reveal-card" data-aos="fade-left" data-aos-delay="200">
+                <div class="project-number">02</div>
+                <div class="project-content">
+                    <div class="project-icon">🎓</div>
+                    <h3>Formation de 200 professionnels de santé aux outils numériques</h3>
+                    <p>Dans les trois grandes villes du Tchad !</p>
+                    <div class="project-status completed">Terminé</div>
+                </div>
+            </div>
+            <div class="project-item reveal-card" data-aos="fade-right" data-aos-delay="300">
+                <div class="project-number">03</div>
+                <div class="project-content">
+                    <div class="project-icon">🏥</div>
+                    <h3>Mise en place d'un système d'information hospitalier</h3>
+                    <p>Dans 5 hôpitaux régionaux</p>
+                    <div class="project-status">En cours</div>
+                </div>
+            </div>
+            <div class="project-item reveal-card" data-aos="fade-left" data-aos-delay="400">
+                <div class="project-number">04</div>
+                <div class="project-content">
+                    <div class="project-icon">📱</div>
+                    <h3>Lancement d'une application mobile</h3>
+                    <p>De sensibilisation en santé publique</p>
+                    <div class="project-status upcoming">À venir</div>
+                </div>
+            </div>
+            <div class="project-item reveal-card" data-aos="fade-right" data-aos-delay="500">
+                <div class="project-number">05</div>
+                <div class="project-content">
+                    <div class="project-icon">🏢</div>
+                    <h3>Création d'un centre d'expertise en santé numérique</h3>
+                    <p>Dans la ville de N'Djaména</p>
+                    <div class="project-status upcoming">À venir</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Curseur personnalisé -->
+<div class="custom-cursor">
+    <div class="cursor-inner"></div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="{% static '/static/js/soins.js' %}"></script>
+{% endblock %}

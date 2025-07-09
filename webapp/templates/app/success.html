@@ -1,0 +1,63 @@
+
+<!-- templates/candidature/success.html -->
+{% extends 'candidature/base.html' %}
+
+{% block title %}Candidature envoyée{% endblock %}
+
+{% block progress %}{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <div class="mb-4">
+        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+    </div>
+    
+    <h2 class="text-success mb-3">Candidature envoyée avec succès!</h2>
+    
+    <div class="alert alert-success">
+        <h5>
+            <i class="fas fa-envelope me-2"></i>Votre candidature a été transmise
+        </h5>
+        <p class="mb-0">
+            Nous avons bien reçu votre candidature. Notre équipe RH l'examinera et vous contactera 
+            dans les <strong>48 heures</strong> pour vous informer de la suite du processus.
+        </p>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock text-primary mb-3" style="font-size: 2rem;"></i>
+                    <h6>Délai de réponse</h6>
+                    <p class="small text-muted">Maximum 48 heures</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users text-primary mb-3" style="font-size: 2rem;"></i>
+                    <h6>Équipe RH</h6>
+                    <p class="small text-muted">Examen par nos experts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-handshake text-primary mb-3" style="font-size: 2rem;"></i>
+                    <h6>Entretien</h6>
+                    <p class="small text-muted">Si sélectionné(e)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a href="/" class="btn btn-primary">
+            <i class="fas fa-home me-2"></i>Retour à l'accueil
+        </a>
+    </div>
+</div>
+{% endblock %}

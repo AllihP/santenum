@@ -1,0 +1,14 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Inscription réussie" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5 text-center">
+    <h1>{% trans "Inscription confirmée" %}</h1>
+    <p>{% trans "Merci pour votre inscription à" %} <strong>{{ event.title }}</strong>.</p>
+    <p>{% trans "Un email de confirmation a été envoyé à" %} {{ registration.email }}.</p>
+    <a href="{% url 'events:event_detail' slug=event.slug %}" class="btn btn-primary">{% trans "Retour à l'événement" %}</a>
+</div>
+{% endblock %}

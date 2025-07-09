@@ -1,0 +1,183 @@
+{% load i18n %}
+
+
+<style>
+    /* Préchargement */
+#preloader {
+    position: fixed;
+    inset: 0;
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: opacity 0.5s;
+}
+
+#preloader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-blue);
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    position: relative;
+    animation: spin 1s linear infinite;
+}
+
+.loader::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 6px solid var(--primary-blue);
+    border-top-color: transparent;
+    clip-path: inherit;
+    animation: spin 1s linear infinite reverse;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loader-text {
+    color: var(--primary-blue);
+    font: 20px/1.6 Arial, sans-serif;
+    margin-top: 1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    animation: pulse 1.5s infinite;
+}
+</style>
+
+
+<!-- Preloader -->
+<div id="preloader" role="status" aria-live="polite">
+    <div class="loader"></div>
+    <div class="loader-text">{% trans "Chargement..." %}</div>
+</div>
+
+<script>
+       // Simulation de connexion avant chargement
+    class Preloader {
+        constructor() {
+            this.preloader = document.getElementById('preloader');
+            this.content = document.getElementById('content');
+            this.init();
+        }
+
+        async init() {
+            // Simulation d'une connexion réseau (par exemple, 2 secondes)
+            await this.simulateNetworkDelay();
+            this.hidePreloader();
+            this.showContent();
+            this.createParticleEffect();
+        }
+
+        async simulateNetworkDelay() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    console.log('Connexion simulée établie');
+                    resolve();
+                }, 2000); // Délai de 2 secondes
+            });
+        }
+
+        hidePreloader() {
+            this.preloader.classList.add('hidden');
+        }
+
+        showContent() {
+            this.content.classList.add('visible');
+        }
+
+        createParticleEffect() {
+            const canvas = document.createElement('canvas');
+            canvas.style.position = 'absolute';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.zIndex = '9999';
+            document.body.appendChild(canvas);
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const particles = [];
+            const particleCount = 50;
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 5 + 1;
+                    this.speedX = Math.random() * 3 - 1.5;
+                    this.speedY = Math.random() * 3 - 1.5;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.size > 0.2) this.size -= 0.1;
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                }
+
+                draw() {
+                    ctx.fillStyle = `rgba(74, 144, 226, ${this.size / 5})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let particle of particles) {
+                    particle.update();
+                    particle.draw();
+                    if (particle.size <= 0.2) particles.splice(particles.indexOf(particle), 1);
+                }
+                if (particles.length) requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // Supprimer le canvas une fois le préchargement terminé
+            setTimeout(() => {
+                canvas.remove();
+            }, 2000);
+        }
+    }
+
+    // Instanciation du préloader immédiatement
+    (async () => {
+        const preloader = new Preloader();
+    })();
+
+    // Animation au chargement pour les cartes d’événements
+    eventCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add("visible");
+        }, 500 + index * 300); // Délai pour un effet séquentiel
+    });
+
+    // Effet au survol pour les cartes (ajout d’une rotation légère)
+    eventCards.forEach(card => {
+        card.addEventListener("mouseover", function() {
+            this.style.transform = "translateY(-10px) rotate(2deg)";
+        });
+        card.addEventListener("mouseout", function() {
+            this.style.transform = "translateY(0) rotate(0deg)";
+        });
+    });
+
+</script>

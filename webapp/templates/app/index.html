@@ -1,0 +1,191 @@
+{% extends "./includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "À propos" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link rel="stylesheet" href="/static/css/styles.css">
+
+{% endblock %}
+
+{% block content %}
+<!-- En-tête -->
+<header class="about-header">
+    <h1>{% trans "À PROPOS" %}</h1>
+    <p>{% trans "La technologie au service de la santé pour tous" %}</p>
+</header>
+
+<!-- Navigation rapide -->
+<div class="button-grid" role="navigation" aria-label="{% trans 'Navigation rapide' %}">
+    <a href="#vision" class="learn-more-button">{% trans "Notre Vision" %}<i class="fas fa-eye"></i></a>
+    <a href="#objectifs" class="learn-more-button">{% trans "Nos Objectifs Stratégiques" %}<i class="fas fa-bullseye"></i></a>
+    <a href="#partenaires" class="learn-more-button">{% trans "Nos partenaires" %}<i class="fas fa-handshake"></i></a>
+</div>
+
+<!-- Tableau historique -->
+<section>
+    <table class="health-table">
+        <tbody>
+            <tr class="image-row">
+                <td class="health-image-cell">
+                    <img src="{% static 'images/webinar.jpg' %}" alt="Webinar" class="health-img">
+                </td>
+                <td class="health-image-cell">
+                    <img src="{% static 'images/infographic.jpg' %}" alt="Infographic" class="health-img">
+                </td>
+                <td class="health-image-cell">
+                    <img src="{% static 'images/insight-brief.jpg' %}" alt="Insight Brief" class="health-img">
+                </td>
+            </tr>
+            <tr class="text-row" data-animation="fadeInUp">
+                <td class="health-content-cell">
+                    <h2>{% trans "Le Programme National de Télémédecine a été institué par l'arrêté ministériel N°343." %}</h2>
+                    <div class="contenu">
+                        <p>{% trans "Le 24 décembre 2021 constitue la date officielle de promulgation de l'acte fondateur du Programme National de la Télémédecine." %}</p>
+                    </div>
+                </td>
+                <td class="health-content-cell">
+                    <h2>{% trans "À l'issue d'une période biennale, le programme s'est vu assujetti à une restructuration fondamentale consécutive à l'entrée en vigueur de l'arrêté N°0121." %}</h2>
+                    <div class="contenu">
+                        <p>{% trans "Le 24 janvier 2023 marque l'institution du Programme National de la Santé Numérique, se substituant désormais au Programme National de la Télémédecine." %}</p>
+                    </div>
+                </td>
+                <td class="health-content-cell">
+                    <h2>{% trans "Le Programme National de Santé Numérique est investi de la mission d'exécuter la politique élaborée par le Ministère en charge de la Santé Publique dans le domaine de la Santé Numérique." %}</h2>
+                    <div class="contenu">
+                        <p>{% trans "Arrêtés et règlements" %}</p>
+                        <p>{% trans "Organigrammes" %}</p>
+                        <p>{% trans "Procédures administratives" %}</p>
+                        <p>{% trans "Politique Nationale de Santé" %}</p>
+                        <p>{% trans "Stratégies de santé publique" %}</p>
+                        <p>{% trans "Lutte contre les maladies transmissibles (VIH/SIDA, tuberculose, etc.)" %}</p>
+                        <p>{% trans "Santé maternelle et infantile" %}</p>
+                        <p>{% trans "Rapports de recherche" %}</p>
+                        <p>{% trans "Statistiques sanitaires" %}</p>
+                        <p>{% trans "Ressources humaines (recrutement, formation)" %}</p>
+                        <p>{% trans "Gestion des médicaments et des laboratoires" %}</p>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- En-tête du programme -->
+    <div class="timeline-section">
+        <header>
+            <h1>{% trans "Programme National de la Santé Numérique" %}</h1>
+            <p>{% trans "La technologie au service de la santé pour tous" %}</p>
+        </header>
+    </div>
+</section>
+
+<!-- Section portraits -->
+<section class="portraits-section">
+    <h2>{% trans "Sous le leadership de :" %}</h2>
+    <div class="portraits">
+        <div class="portrait-card fade-in-up">
+            <img src="{% static 'images/dr-chene.png' %}" alt="{% trans 'Portrait de Dr Abdelmadjid Abderrahim' %}" class="portrait-img" loading="lazy">
+            <h3>{% trans "Dr Abdelmadjid Abderrahim" %}</h3>
+            <p>{% trans "Ministre de la Santé Publique et de la Prévention" %}</p>
+        </div>
+        <div class="portrait-card fade-in-up">
+            <img src="{% static 'images/mr-dabsou.png' %}" alt="{% trans 'Portrait de Mr Dabsou Guidaoussou' %}" class="portrait-img" loading="lazy">
+            <h3>{% trans "Mr Dabsou Guidaoussou" %}</h3>
+            <p>{% trans "Secrétaire Général" %}</p>
+        </div>
+        <div class="portrait-card fade-in-up">
+            <img src="{% static 'images/drahamathamit.png' %}" alt="{% trans 'Portrait de Dr Mahamat Hamit Ahmat' %}" class="portrait-img" loading="lazy">
+            <h3>{% trans "Dr Mahamat Hamit Ahmat" %}</h3>
+            <p>{% trans "Secrétaire Général Adjoint" %}</p>
+        </div>
+        <div class="portrait-card fade-in-up">
+            <img src="{% static 'images/mr-nassir.png' %}" alt="{% trans 'Portrait de Mr Nassir Idriss Adam' %}" class="portrait-img" loading="lazy">
+            <h3>{% trans "Mr Nassir Idriss Adam" %}</h3>
+            <p>{% trans "Coordonnateur du Programme National Santé Numérique" %}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Sections principales -->
+<section id="vision">
+    <h2>{% trans "Notre Vision" %}</h2>
+    <p>{% trans "Transformer le système de santé tchadien grâce aux technologies numériques pour améliorer l'accès, la qualité et l'efficience des soins de santé pour tous les citoyens." %}</p>
+</section>
+
+<section id="objectifs">
+    <h2>{% trans "Nos Objectifs Stratégiques" %}</h2>
+    <div class="objectifs-grid">
+        <article>
+            <div class="objectifs-list">
+                <h3><i class="fas fa-network-wired"></i> {% trans "1. Infrastructure et Connectivité" %}</h3>
+                <ul>
+                    <li>{% trans "Déployer des infrastructures technologiques fiables dans les établissements de santé" %}</li>
+                    <li>{% trans "Établir une connectivité réseau stable dans les zones prioritaires" %}</li>
+                    <li>{% trans "Mettre en place des solutions adaptées aux régions à faible connectivité" %}</li>
+                </ul>
+            </div>
+            <div class="objectifs-list">
+                <h3><i class="fas fa-file-medical"></i> {% trans "2. Dossier Médical Électronique" %}</h3>
+                <ul>
+                    <li>{% trans "Développer et déployer un système national de dossier médical électronique" %}</li>
+                    <li>{% trans "Assurer l'interopérabilité entre les différents systèmes d'information de santé" %}</li>
+                    <li>{% trans "Garantir la sécurité et la confidentialité des données des patients" %}</li>
+                </ul>
+            </div>
+            <div class="objectifs-list">
+                <h3><i class="fas fa-video"></i> {% trans "3. Télémédecine" %}</h3>
+                <ul>
+                    <li>{% trans "Étendre les services de consultation à distance dans les zones rurales" %}</li>
+                    <li>{% trans "Former les professionnels de santé aux outils de télémédecine" %}</li>
+                    <li>{% trans "Créer un réseau d'experts médicaux disponibles pour des consultations à distance" %}</li>
+                </ul>
+            </div>
+            <div class="objectifs-list">
+                <h3><i class="fas fa-graduation-cap"></i> {% trans "4. Renforcement des Compétences" %}</h3>
+                <ul>
+                    <li>{% trans "Former le personnel de santé aux outils numériques" %}</li>
+                    <li>{% trans "Développer les compétences en informatique médicale" %}</li>
+                    <li>{% trans "Sensibiliser la population à l'utilisation des services de santé numériques" %}</li>
+                </ul>
+            </div>
+            <div class="objectifs-list">
+                <h3><i class="fas fa-chart-line"></i> {% trans "5. Systèmes d'Information Sanitaire" %}</h3>
+                <ul>
+                    <li>{% trans "Améliorer la collecte et l'analyse des données sanitaires" %}</li>
+                    <li>{% trans "Renforcer la surveillance épidémiologique par des outils numériques" %}</li>
+                    <li>{% trans "Faciliter la prise de décision basée sur des données fiables" %}</li>
+                </ul>
+            </div>
+            <div class="objectifs-list">
+                <h3><i class="fas fa-hospital"></i> {% trans "6. Systèmes d'Information Hospitalière" %}</h3>
+                <ul>
+                    <li>{% trans "Gérer les opérations quotidiennes et les processus cliniques au sein de l'hôpital" %}</li>
+                    <li>{% trans "Dossiers médicaux électroniques, gestion des rendez-vous, facturation, gestion des lits, pharmacie, imagerie médicale, etc." %}</li>
+                    <li>{% trans "Améliorer l'efficacité des soins, la gestion administrative et la prise en charge des patients" %}</li>
+                </ul>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section id="partenaires">
+    <h2>{% trans "Notre programme s'appuie sur des collaborations solides avec:" %}</h2>
+    <ul>
+        <li>{% trans "Le Ministère de la Santé Publique Et de la Prévention" %}</li>
+        <li>{% trans "Le Ministère des Technologies de l'Information" %}</li>
+        <li>{% trans "L'Organisation Mondiale de la Santé" %}</li>
+        <li>{% trans "L'Agence Française de Développement" %}</li>
+        <li>{% trans "La Banque Mondiale" %}</li>
+        <li>{% trans "Le Programme des Nations Unies pour le Développement" %}</li>
+        <li>{% trans "La Fondation Bill Gates" %}</li>
+        <li>{% trans "Les opérateurs téléphoniques nationaux" %}</li>
+    </ul>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static '/static/js/script.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,185 @@
+
+:root {
+    --primary: #55a2ee;
+    --secondary: #3092f5ad;
+    --accent: #1f62e0;
+    --dark: #2c3e50;
+    --light: #f8f9ff;
+    --white: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --border-radius: 16px;
+    --font-size-base: 16px;
+    --font-size-heading: 1.1rem;
+    --spacing-unit: 1rem;
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--light), #e6f0ff);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+}
+
+main {
+    padding: var(--spacing-unit);
+    flex: 1;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--border-radius);
+    max-width: 1200px;
+    margin: 0 auto;
+    box-shadow: 0 8px 24px var(--shadow);
+    height: calc(100vh - 2 * var(--spacing-unit));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-title h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 0 var(--spacing-unit);
+}
+
+.grid-item {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    box-shadow: 0 4px 16px var(--shadow);
+    transition: var(--transition);
+    opacity: 0;
+    animation: slideIn 0.5s ease forwards;
+}
+
+.grid-item:nth-child(1) { animation-delay: 0.1s; }
+.grid-item:nth-child(2) { animation-delay: 0.2s; }
+.grid-item:nth-child(3) { animation-delay: 0.3s; }
+.grid-item:nth-child(4) { animation-delay: 0.4s; }
+.grid-item:nth-child(5) { animation-delay: 0.5s; }
+.grid-item:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.grid-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(85, 162, 238, 0.2);
+}
+
+.grid-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    transition: var(--transition);
+}
+
+.grid-item:hover img {
+    transform: scale(1.03);
+    filter: brightness(1.05);
+}
+
+.grid-item h3 {
+    font-size: var(--font-size-heading);
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.grid-item h3 a {
+    text-decoration: none;
+    color: var(--dark);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.grid-item:hover h3 a {
+    background: linear-gradient(135deg, var(--accent), #ff6b6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+@media (max-width: 1024px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --font-size-base: 14px;
+        --font-size-heading: 1rem;
+        --spacing-unit: 0.75rem;
+        --border-radius: 12px;
+    }
+    main {
+        padding: 0.75rem;
+    }
+    .grid-item img {
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    .grid-item img {
+        height: 100px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .grid-item, .section-title h1 {
+        animation: none;
+        transform: none;
+        opacity: 1;
+    }
+}

@@ -1,0 +1,75 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Statistiques des événements" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "Statistiques des événements" %}</h1>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Total événements" %}</h5>
+                    <p>{{ stats.total_events }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Événements à venir" %}</h5>
+                    <p>{{ stats.upcoming_events }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{% trans "Événements passés" %}</h5>
+                    <p>{{ stats.past_events }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>{% trans "Catégories populaires" %}</h3>
+    <ul class="list-group mb-4">
+        {% for category in stats.categories %}
+        <li class="list-group-item">
+            {{ category.name }} ({{ category.event_count }} {% trans "événements" %})
+        </li>
+        {% empty %}
+        <li class="list-group-item">{% trans "Aucune catégorie." %}</li>
+        {% endfor %}
+    </ul>
+    <h3>{% trans "Lieux populaires" %}</h3>
+    <ul class="list-group mb-4">
+        {% for location in stats.popular_locations %}
+        <li class="list-group-item">
+            {{ location.city }} ({{ location.event_count }} {% trans "événements" %})
+        </li>
+        {% empty %}
+        <li class="list-group-item">{% trans "Aucun lieu." %}</li>
+        {% endfor %}
+    </ul>
+    <h3>{% trans "Événements récents" %}</h3>
+    <div class="row">
+        {% for event in stats.recent_events %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="card-text">{{ event.start_date|date:"d M Y" }}</p>
+                    <a href="{% url 'events:event_detail' slug=event.slug %}" class="btn btn-outline-primary">{% trans "Voir détails" %}</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>{% trans "Aucun événement récent." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

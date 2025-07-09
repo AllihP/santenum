@@ -1,0 +1,79 @@
+
+<!-- templates/candidature/step4.html -->
+{% extends 'candidature/base.html' %}
+
+{% block title %}Étape 4 - Documents{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="mb-4">
+            <i class="fas fa-file-upload text-primary me-2"></i>
+            Documents
+        </h3>
+        
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Formats acceptés: PDF, DOC, DOCX. Taille maximale: 5MB par fichier.
+        </div>
+        
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="{{ form.cv.id_for_label }}" class="form-label">
+                    <i class="fas fa-file-alt me-1"></i>CV * <span class="text-muted">(obligatoire)</span>
+                </label>
+                {{ form.cv }}
+                {% if form.cv.errors %}
+                    <div class="text-danger small mt-1">{{ form.cv.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.lettre_motivation.id_for_label }}" class="form-label">
+                    <i class="fas fa-file-text me-1"></i>Lettre de motivation <span class="text-muted">(optionnel)</span>
+                </label>
+                {{ form.lettre_motivation }}
+                {% if form.lettre_motivation.errors %}
+                    <div class="text-danger small mt-1">{{ form.lettre_motivation.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Récapitulatif -->
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-eye me-2"></i>Récapitulatif de votre candidature
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Informations personnelles</h6>
+                            <p class="mb-1"><strong>Nom:</strong> {{ candidature.prenom }} {{ candidature.nom }}</p>
+                            <p class="mb-1"><strong>Email:</strong> {{ candidature.email }}</p>
+                            <p class="mb-1"><strong>Téléphone:</strong> {{ candidature.telephone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Formation</h6>
+                            <p class="mb-1"><strong>Niveau:</strong> {{ candidature.get_niveau_etude_display }}</p>
+                            <p class="mb-1"><strong>Domaine:</strong> {{ candidature.get_domaine_etude_display }}</p>
+                            <p class="mb-1"><strong>Établissement:</strong> {{ candidature.etablissement }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'candidature_step3' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Précédent
+                </a>
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-paper-plane me-2"></i>Soumettre ma candidature
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

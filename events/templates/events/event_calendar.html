@@ -1,0 +1,43 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Calendrier des événements" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
+<style>
+    #calendar { max-width: 900px; margin: 0 auto; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "Calendrier des événements" %}</h1>
+    <div id="calendar"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: '{% url 'events:event_calendar_data' %}',
+        eventClick: function(info) {
+            window.location.href = info.event.url;
+        },
+        locale: 'fr',
+        buttonText: {
+            today: 'Aujourd\'hui',
+            month: 'Mois',
+            week: 'Semaine',
+            day: 'Jour'
+        }
+    });
+    calendar.render();
+});
+</script>
+{% endblock %}

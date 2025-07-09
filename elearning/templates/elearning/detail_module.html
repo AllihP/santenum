@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Module - {{ module.title|default:"Chargement..." }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #007bff; text-align: center; margin-bottom: 20px; }
+        .module-details { margin-top: 20px; }
+        .module-details p { margin-bottom: 10px; line-height: 1.6; }
+        .module-details strong { color: #343a40; }
+        .module-actions { text-align: center; margin-top: 30px; }
+        .back-link, .enroll-button { text-decoration: none; background-color: #6c757d; color: white; padding: 10px 20px; border-radius: 5px; margin: 0 10px; transition: background-color 0.3s ease; }
+        .enroll-button { background-color: #007bff; }
+        .back-link:hover { background-color: #5a6268; }
+        .enroll-button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Détails du Module : {{ module.title }}</h1>
+
+        <div class="module-details">
+            <p><strong>Description :</strong> {{ module.description }}</p>
+            <p><strong>Catégorie :</strong> {{ module.category.name|default:"Non spécifiée" }}</p> {# Assuming 'category' is a foreign key with a 'name' field #}
+            <p><strong>Niveau :</strong> {{ module.level|default:"Non spécifié" }}</p>
+            <p><strong>Durée estimée :</strong> {{ module.estimated_duration|default:"N/A" }} minutes</p>
+            <p><strong>Créé le :</strong> {{ module.created_at|date:"d M Y H:i" }}</p>
+            <p><strong>Dernière mise à jour :</strong> {{ module.updated_at|date:"d M Y H:i" }}</p>
+
+            {# Ajoutez ici la logique pour afficher les leçons du module si vous en avez #}
+            <h2>Leçons :</h2>
+            {% if module.lessons.all %} {# Assuming you have a related_name 'lessons' on Lesson model #}
+                <ul>
+                {% for lesson in module.lessons.all %}
+                    <li>{{ lesson.title }} ({{ lesson.estimated_duration }} min)</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucune leçon disponible pour ce module.</p>
+            {% endif %}
+        </div>
+
+        <div class="module-actions">
+            {# Exemple de bouton pour s'inscrire au module (nécessiterait une vue et URL dédiées) #}
+            {# <a href="{% url 'elearning:enroll_module' module.id %}" class="enroll-button">S'inscrire à ce module</a> #}
+            <a href="{% url 'elearning:liste_modules' %}" class="back-link">Retour à la liste des modules</a>
+        </div>
+    </div>
+</body>
+</html>

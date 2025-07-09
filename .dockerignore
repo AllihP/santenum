@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+*.pyc
+*.log
+__pycache__/
+venv/
+env/
+node_modules/
+media/  # Si vos médias sont stockés localement et que vous ne voulez pas les inclure dans l'image
+db.sqlite3 # Si vous utilisez SQLite en développement, ne pas l'inclure

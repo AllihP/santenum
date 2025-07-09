@@ -1,0 +1,85 @@
+{% extends "./includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Nos Services" %} - {% trans "Services" %}{% endblock %}
+
+<link rel="stylesheet" href="/static/css/services.css">
+
+{% block content %}
+
+
+<main>
+    <section class="section-title" role="banner">
+        <h1>{% trans "Nos Services" %}</h1>
+    </section>
+    <section class="grid-container" role="region" aria-label="{% trans 'Nos services' %}">
+        {% for service in services %}
+        <article class="grid-item" role="article">
+            <a href="{{ service.url|default:'services' }}" aria-label="{{ service.title }}" aria-describedby="service-{{ service.id }}-desc">
+                <img src="{{ service.image.url }}" alt="{% trans service.image_alt %}" loading="lazy">
+            </a>
+            <h3>
+                <a href="{{ service.url|default:'services' }}">{{ service.title }}</a>
+            </h3>
+            <p id="service-{{ service.id }}-desc" class="sr-only">
+                {% trans "Description du service" %} {{ service.title }}
+            </p>
+        </article>
+        {% empty %}
+        <article class="grid-item" role="article">
+            <a href="{% url 'webapp:soins' %}" aria-label="{% trans 'Service de l’offre de soins et des services de santé' %}">
+                <img src="{% static 'images/services-soins.jpg' %}" alt="{% trans 'Image illustrant les services de soins de santé' %}" loading="lazy">
+            </a>
+            <h3>
+                <a href="{% url 'webapp:soins' %}">{% trans "Service de l’offre de soins et des services de santé" %}</a>
+            </h3>
+        </article>
+        <article class="grid-item" role="article">
+            <a href="{% url 'webapp:technologies' %}" aria-label="{% trans 'Service d’informatique, de nouvelle technologie, du matériel et des équipements' %}">
+                <img src="{% static 'images/services-tic.png' %}" alt="{% trans 'Image illustrant les services de technologies de l’information' %}" loading="lazy">
+            </a>
+            <h3>
+                <a href="{% url 'webapp:technologies' %}">{% trans "Service d’informatique, de nouvelle technologie, du matériel et des équipements" %}</a>
+            </h3>
+        </article>
+        <article class="grid-item" role="article">
+            <a href="{% url 'webapp:suivi' %}" aria-label="{% trans 'Suivi et évaluation' %}">
+                <img src="{% static 'images/suivi-evaluation.jpg' %}" alt="{% trans 'Image illustrant le suivi et l’évaluation' %}" loading="lazy">
+            </a>
+            <h3>
+                <a href="{% url 'webapp:suivi' %}">{% trans "Suivi et évaluation" %}</a>
+            </h3>
+        </article>
+        <article class="grid-item" role="article">
+            <a href="{% url 'webapp:administration' %}" aria-label="{% trans 'Service administratif, de la formation et de perfectionnement' %}">
+                <img src="{% static 'images/services-applications.jpg' %}" alt="{% trans 'Image illustrant les services administratifs et de formation' %}" loading="lazy">
+            </a>
+            <h3>
+                <a href="{% url 'webapp:administration' %}">{% trans "Service administratif, de la formation et de perfectionnement" %}</a>
+            </h3>
+        </article>
+        <article class="grid-item" role="article">
+            <a href="{% url 'webapp:lab' %}" aria-label="{% trans 'LAB d’accélération' %}">
+                <img src="{% static 'images/lab-acceleration.jpg' %}" alt="{% trans 'Image illustrant le laboratoire d’accélération' %}" loading="lazy">
+            </a>
+            <h3>
+                <a href="{% url 'webapp:lab' %}">{% trans "LAB d’accélération" %}</a>
+            </h3>
+        </article>
+        <article class="grid-item" role="article">
+            <a href="{% url 'webapp:immersion' %}" aria-label="{% trans 'Immersion en Med Moderne' %}">
+                <img src="{% static 'images/immersion-med-moderne.jpg' %}" alt="{% trans 'Image illustrant l’immersion en médecine moderne' %}" loading="lazy">
+            </a>
+            <h3>
+                <a href="{% url 'webapp:immersion' %}">{% trans "Immersion en Med Moderne" %}</a>
+            </h3>
+        </article>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static '/static/js/services.js' %}"></script>
+{% endblock %}

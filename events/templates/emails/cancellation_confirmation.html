@@ -1,0 +1,17 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% trans "Confirmation d'annulation" %}</title>
+</head>
+<body>
+    <h1>{% trans "Confirmation d'annulation" %}</h1>
+    <p>{% trans "Bonjour" %} {{ registration.full_name }},</p>
+    <p>{% trans "Votre inscription à l'événement" %} <strong>{{ event.title }}</strong> {% trans "a été annulée." %}</p>
+    {% if reason %}
+    <p>{% trans "Raison :" %} {{ reason }}</p>
+    {% endif %}
+    <p>{% trans "Merci de nous avoir informés." %}</p>
+    <p>{% trans "L'équipe" %} {{ site_name }}</p>
+</body>
+</html>

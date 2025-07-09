@@ -1,0 +1,20 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% trans "Nouveau feedback pour" %} {{ event.title }}</title>
+</head>
+<body>
+    <h1>{% trans "Nouveau feedback pour" %} {{ event.title }}</h1>
+    <p><strong>{% trans "Satisfaction générale :" %}</strong> {{ feedback.overall_rating }}/5</p>
+    <p><strong>{% trans "Qualité du contenu :" %}</strong> {{ feedback.content_rating }}/5</p>
+    <p><strong>{% trans "Organisation :" %}</strong> {{ feedback.organization_rating }}/5</p>
+    <p><strong>{% trans "Lieu :" %}</strong> {{ feedback.venue_rating }}/5</p>
+    <p><strong>{% trans "Ce qui a été aimé :" %}</strong> {{ feedback.what_liked|default:"Non spécifié" }}</p>
+    <p><strong>{% trans "Ce qui n'a pas été aimé :" %}</strong> {{ feedback.what_disliked|default:"Non spécifié" }}</p>
+    <p><strong>{% trans "Suggestions :" %}</strong> {{ feedback.suggestions|default:"Aucune" }}</p>
+    <p><strong>{% trans "Recommandation :" %}</strong> {% if feedback.recommend %}{% trans "Oui" %}{% else %}{% trans "Non" %}{% endif %}</p>
+    <p><strong>{% trans "Sujets futurs :" %}</strong> {{ feedback.future_topics|default:"Aucun" }}</p>
+    <p>{% trans "L'équipe" %} {{ site_name }}</p>
+</body>
+</html>

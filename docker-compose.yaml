@@ -1,0 +1,70 @@
+version: '3.8' # Vous pouvez ignorer l'avertissement 'version' obsolète pour l'instant
+
+volumes:
+  static_volume:
+  media_volume: # Nouveau volume pour les fichiers média
+  db_data:
+
+services:
+  mysql_db:
+    image: mysql:8.0
+    container_name: santenumerique_mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: Ammi/123@
+      MYSQL_DATABASE: santenumerique_db
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - santenumerique_default
+
+  web:
+    build: .
+    container_name: santenumerique_web
+    command: gunicorn santenumerique.wsgi:application --bind 0.0.0.0:8000 # Gunicorn écoute en interne sur 8000
+    volumes:
+      - .:/app
+      - static_volume:/vol/static # Mappage du volume statique pour Django (collectstatic y écrira)
+      - media_volume:/vol/media # Mappage du volume média pour Django (fichiers uploadés)
+    expose:
+      - "8000" # Expose le port 8000 en interne au réseau Docker (Nginx y accédera)
+    environment:
+      DJANGO_DB_NAME: santenumerique_db
+      DJANGO_DB_USER: root
+      DJANGO_DB_PASSWORD: Ammi/123@
+      DJANGO_DB_HOST: mysql_db
+      DJANGO_DB_PORT: 3306
+      DJANGO_DEBUG: 'False' # En production, DEBUG doit être False
+      # Assurez-vous d'ajouter ici les variables d'environnement pour EMAIL_HOST, EMAIL_PORT, etc.
+      # SECRET_KEY: 'Votre_clé_secrète_complexe_ici_ou_dans_un_fichier_.env_chargé_par_compose'
+      # ALLOWED_HOSTS: 'votre_domaine.com,127.0.0.1' # Important pour DEBUG=False
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+    networks:
+      - santenumerique_default
+
+  nginx: # Nouveau service Nginx
+    image: nginx:latest # Utilise l'image Nginx officielle
+    container_name: santenumerique_nginx
+    ports:
+      - "80:80" # Mappe le port 80 de l'hôte au port 80 de Nginx
+      # Pour HTTPS: - "443:443"
+    volumes:
+      - static_volume:/vol/static:ro # Monte le volume statique en lecture seule pour Nginx
+      - media_volume:/vol/media:ro   # Monte le volume média en lecture seule pour Nginx
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro # Monte le fichier de configuration Nginx
+    depends_on:
+      - web # Nginx dépend du service web (Gunicorn)
+    networks:
+      - santenumerique_default
+
+networks:
+  santenumerique_default:
+    driver: bridge

@@ -1,0 +1,641 @@
+{% load static %}
+{% load i18n %}
+
+<!-- Navbar -->
+<nav class="navbar" role="navigation" aria-label="{% trans 'Menu principal' %}">
+    <div class="navbar-container">
+        <div class="logo">
+            <a href="{% url 'webapp:index' %}" rel="noopener">
+                <img src="{% static 'images/logo.png' %}" alt="{% trans 'Logo du Programme National de Santé Numérique' %}" class="logo-img" loading="lazy">
+            </a>
+        </div>
+
+        <!-- Menu burger button -->
+        <button class="burger-menu" id="burger-menu" aria-label="{% trans 'Ouvrir le menu' %}" aria-expanded="false">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li data-index="0">
+                <a href="{% url 'webapp:index' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'index' %}active{% endif %}" 
+                   {% if request.resolver_match.url_name == 'index' %}aria-current="page"{% endif %}>
+                    {% trans "À propos" %}
+                </a>
+            </li>
+            <li data-index="5">
+                <a href="{% url 'webapp:evenements' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'evenements' %}active{% endif %}"
+                   {% if request.resolver_match.url_name == 'evenements' %}aria-current="page"{% endif %}>
+                    {% trans "Événements" %}
+                </a>
+            </li>
+            <li data-index="1">
+                <a href="{% url 'webapp:services' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'services' %}active{% endif %}"
+                   {% if request.resolver_match.url_name == 'services' %}aria-current="page"{% endif %}>
+                    {% trans "Nos Services" %}
+                </a>
+            </li>
+            <li data-index="2">
+                <a href="{% url 'webapp:applications' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'applications' %}active{% endif %}"
+                   {% if request.resolver_match.url_name == 'applications' %}aria-current="page"{% endif %}>
+                    {% trans "Applications" %}
+                </a>
+            </li>
+            <li data-index="3">
+                <a href="{% url 'webapp:formations' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'formations' %}active{% endif %}"
+                   {% if request.resolver_match.url_name == 'formations' %}aria-current="page"{% endif %}>
+                    {% trans "Formations" %}
+                </a>
+            </li>
+             
+            <li data-index="4" class="language-selector">
+                <div class="dropdown">
+                    <button class="dropdown-btn nav-button" aria-label="{% trans 'Choisir une langue' %}" aria-expanded="false">
+                        <span class="current-lang">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% if LANGUAGE_CODE == 'fr' %}🇫🇷 Français
+                            {% elif LANGUAGE_CODE == 'en' %}🇺🇸 English  
+                            {% elif LANGUAGE_CODE == 'ar' %}🇸🇦 العربية
+                            {% else %}🇫🇷 Français{% endif %}
+                        </span>
+                        <svg class="dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu">
+                        {% get_available_languages as languages %}
+                        {% for code, name in languages %}
+                            <form method="post" action="/i18n/setlang/" class="language-form">
+                                {% csrf_token %}
+                                <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
+                                <input name="language" type="hidden" value="{{ code }}" />
+                                <button type="submit" class="dropdown-item {% if LANGUAGE_CODE == code %}active{% endif %}">
+                                    {% if code == 'fr' %}🇫🇷 Français
+                                    {% elif code == 'en' %}🇺🇸 English
+                                    {% elif code == 'ar' %}🇸🇦 العربية
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% endfor %}
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Sélecteur de langue intégré dans la navigation -->
+</nav>
+
+<style>
+/* Import des polices élégantes */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Styles pour la navbar */
+
+
+:root {
+    --primary: #55a2ee;
+    --secondary: #3092f5ad;
+    --accent: #1f62e0;
+    --dark: #2c3e50;
+    --light: #f8f9ff;
+   
+    --shadow: rgba(0, 0, 0, 0.1);
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --border-radius: 16px;
+    --font-size-base: 16px;
+    --font-size-heading: 1.25rem;
+    --spacing-unit: 1rem;
+
+
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+    --border-radius: 0.5rem;
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+
+.navbar {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    z-index: 2147483647; /* Valeur maximale du z-index */
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Force l'affichage au-dessus de tout */
+    isolation: isolate;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 80px;
+    gap: 60px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    z-index: 1002;
+    flex-shrink: 0;
+}
+
+.logo-img {
+    height: 60px;
+    width: auto;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.logo-img:hover {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 8px;
+    align-items: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.nav-button {
+    text-decoration: none;
+    color: #334155;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-button:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.nav-button.active {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+}
+
+/* Styles pour le sélecteur de langue */
+.language-selector {
+    position: relative;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-btn {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 140px;
+    justify-content: space-between;
+}
+
+.dropdown-btn:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border-color: #3b82f6;
+}
+
+.current-lang {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+    opacity: 0.7;
+}
+
+.dropdown-btn[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 160px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1003;
+    overflow: hidden;
+}
+
+.dropdown.active .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.language-form {
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-item {
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    text-align: left;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: block;
+    font-family: inherit;
+}
+
+.dropdown-item:hover {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #1e40af;
+}
+
+.dropdown-item.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    font-weight: 600;
+}
+
+/* Styles pour le menu burger */
+.burger-menu {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 12px;
+    z-index: 1001;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.burger-menu:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.burger-line {
+    width: 26px;
+    height: 3px;
+    background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+    margin: 3px 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+}
+
+/* Animation du burger quand il est ouvert */
+.burger-menu.active .burger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.burger-menu.active .burger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu.active .burger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+
+
+ .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(85, 162, 238, 0.3)); }
+            100% { filter: drop-shadow(0 0 15px rgba(85, 162, 238, 0.8)); }
+        }
+
+        .logo-img {
+            height: 50px;
+            width: auto;
+            transition: var(--transition);
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(85, 162, 238, 0.4);
+        }
+
+        .language-selector select {
+            background: var(--white);
+            border: 2px solid var(--primary);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            color: var(--dark);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .language-selector select:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+
+
+/* Styles responsive */
+@media screen and (max-width: 968px) {
+    .navbar-container {
+        padding: 0 30px;
+        gap: 40px;
+    }
+    
+    .nav-links {
+        gap: 4px;
+    }
+    
+    .nav-button {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .burger-menu {
+        display: flex;
+        margin-left: auto;
+    }
+
+    .navbar-container {
+        padding: 0 20px;
+        height: 70px;
+        gap: 20px;
+        justify-content: flex-start;
+    }
+
+    .logo-img {
+        height: 50px;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 100%;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        gap: 30px;
+        box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+        backdrop-filter: blur(10px);
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links li {
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .nav-button {
+        font-size: 18px;
+        padding: 16px 32px;
+        width: 100%;
+        text-align: center;
+        border-radius: 16px;
+        font-weight: 600;
+    }
+
+    .dropdown-btn {
+        width: 100%;
+        justify-content: center;
+        min-width: auto;
+    }
+
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        margin-top: 12px;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .language-selector .dropdown {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .navbar-container {
+        padding: 0 16px;
+        height: 65px;
+    }
+
+    .logo-img {
+        height: 45px;
+    }
+
+    .burger-line {
+        width: 24px;
+    }
+
+    .nav-button {
+        font-size: 16px;
+        padding: 14px 28px;
+    }
+}
+
+/* Animation d'entrée pour les éléments de navigation */
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.nav-links.active li {
+    animation: slideInFromRight 0.3s ease forwards;
+}
+
+.nav-links.active li:nth-child(1) { animation-delay: 0.1s; }
+.nav-links.active li:nth-child(2) { animation-delay: 0.15s; }
+.nav-links.active li:nth-child(3) { animation-delay: 0.2s; }
+.nav-links.active li:nth-child(4) { animation-delay: 0.25s; }
+.nav-links.active li:nth-child(5) { animation-delay: 0.3s; }
+.nav-links.active li:nth-child(6) { animation-delay: 0.35s; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const burgerMenu = document.getElementById('burger-menu');
+    const navLinks = document.getElementById('nav-links');
+    const dropdownBtn = document.querySelector('.dropdown-btn');
+    const dropdown = document.querySelector('.dropdown');
+
+    // Gestion du menu burger
+    burgerMenu.addEventListener('click', function() {
+        burgerMenu.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        
+        const isExpanded = burgerMenu.getAttribute('aria-expanded') === 'true';
+        burgerMenu.setAttribute('aria-expanded', !isExpanded);
+        
+        const label = !isExpanded ? '{% trans "Fermer le menu" %}' : '{% trans "Ouvrir le menu" %}';
+        burgerMenu.setAttribute('aria-label', label);
+    });
+
+    // Gestion du dropdown de langue
+    if (dropdownBtn && dropdown) {
+        dropdownBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            dropdown.classList.toggle('active');
+            const isExpanded = dropdownBtn.getAttribute('aria-expanded') === 'true';
+            dropdownBtn.setAttribute('aria-expanded', !isExpanded);
+        });
+
+        // Fermer le dropdown si on clique en dehors
+        document.addEventListener('click', function(event) {
+            if (!dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+                dropdownBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // Fermer le menu quand on clique sur un lien (sauf le dropdown)
+    const navButtons = document.querySelectorAll('.nav-button:not(.dropdown-btn)');
+    navButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            burgerMenu.classList.remove('active');
+            navLinks.classList.remove('active');
+            burgerMenu.setAttribute('aria-expanded', 'false');
+            burgerMenu.setAttribute('aria-label', '{% trans "Ouvrir le menu" %}');
+        });
+    });
+
+    // Fermer le menu mobile si on clique en dehors
+    document.addEventListener('click', function(event) {
+        if (!burgerMenu.contains(event.target) && 
+            !navLinks.contains(event.target) &&
+            navLinks.classList.contains('active')) {
+            burgerMenu.classList.remove('active');
+            navLinks.classList.remove('active');
+            burgerMenu.setAttribute('aria-expanded', 'false');
+            burgerMenu.setAttribute('aria-label', '{% trans "Ouvrir le menu" %}');
+        }
+    });
+
+    // Gestion du redimensionnement de la fenêtre
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            burgerMenu.classList.remove('active');
+            navLinks.classList.remove('active');
+            burgerMenu.setAttribute('aria-expanded', 'false');
+            dropdown.classList.remove('active');
+            dropdownBtn.setAttribute('aria-expanded', 'false');
+        }
+    });
+});
+</script>

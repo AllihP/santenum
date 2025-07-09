@@ -1,0 +1,31 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Catégories d'événements" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "Catégories d'événements" %}</h1>
+    <p>{% trans "Explorez nos catégories d'événements pour découvrir les initiatives de santé numérique." %}</p>
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    <p class="card-text">
+                        {% trans "Événements :" %} {{ category.event_count }}
+                    </p>
+                    <a href="{% url 'events:events_by_category' category_id=category.id %}" class="btn btn-primary">{% trans "Voir les événements" %}</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>{% trans "Aucune catégorie disponible pour le moment." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

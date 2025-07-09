@@ -1,0 +1,91 @@
+
+<!-- templates/candidature/email_candidature.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nouvelle candidature</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .header { background: #4facfe; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .section { margin-bottom: 20px; }
+        .section h3 { color: #4facfe; border-bottom: 2px solid #4facfe; padding-bottom: 5px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .info-item { margin-bottom: 10px; }
+        .label { font-weight: bold; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Nouvelle candidature reçue</h1>
+        <p>Application de santé numérique</p>
+    </div>
+    
+    <div class="content">
+        <div class="section">
+            <h3>👤 Informations personnelles</h3>
+            <div class="info-grid">
+                <div>
+                    <div class="info-item"><span class="label">Nom:</span> {{ candidature.nom }}</div>
+                    <div class="info-item"><span class="label">Prénom:</span> {{ candidature.prenom }}</div>
+                    <div class="info-item"><span class="label">Date de naissance:</span> {{ candidature.date_naissance }}</div>
+                </div>
+                <div>
+                    <div class="info-item"><span class="label">Email:</span> {{ candidature.email }}</div>
+                    <div class="info-item"><span class="label">Téléphone:</span> {{ candidature.telephone }}</div>
+                    <div class="info-item"><span class="label">Ville:</span> {{ candidature.ville }} ({{ candidature.code_postal }})</div>
+                </div>
+            </div>
+            <div class="info-item"><span class="label">Adresse:</span> {{ candidature.adresse }}</div>
+        </div>
+        
+        <div class="section">
+            <h3>🎓 Formation et expérience</h3>
+            <div class="info-grid">
+                <div>
+                    <div class="info-item"><span class="label">Niveau d'étude:</span> {{ candidature.get_niveau_etude_display }}</div>
+                    <div class="info-item"><span class="label">Domaine:</span> {{ candidature.get_domaine_etude_display }}</div>
+                </div>
+                <div>
+                    <div class="info-item"><span class="label">Établissement:</span> {{ candidature.etablissement }}</div>
+                    <div class="info-item"><span class="label">Année du diplôme:</span> {{ candidature.annee_diplome }}</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="label">Expérience dans la santé:</span><br>
+                {{ candidature.experience_sante|linebreaks }}
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>💡 Motivation et disponibilité</h3>
+            <div class="info-item">
+                <span class="label">Motivation:</span><br>
+                {{ candidature.motivation|linebreaks }}
+            </div>
+            <div class="info-item">
+                <span class="label">Compétences techniques:</span><br>
+                {{ candidature.competences_techniques|linebreaks }}
+            </div>
+            <div class="info-grid">
+                <div class="info-item"><span class="label">Disponibilité:</span> {{ candidature.disponibilite }}</div>
+                {% if candidature.salaire_souhaite %}
+                <div class="info-item"><span class="label">Salaire souhaité:</span> {{ candidature.salaire_souhaite }}€</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>📎 Documents joints</h3>
+            <div class="info-item"><span class="label">CV:</span> {% if candidature.cv %}Fichier joint{% else %}Non fourni{% endif %}</div>
+            <div class="info-item"><span class="label">Lettre de motivation:</span> {% if candidature.lettre_motivation %}Fichier joint{% else %}Non fournie{% endif %}</div>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+            <p><strong>📅 Date de candidature:</strong> {{ candidature.date_creation|date:"d/m/Y à H:i" }}</p>
+            <p><strong>📧 Email de contact:</strong> {{ candidature.email }}</p>
+        </div>
+    </div>
+</body>
+</html>

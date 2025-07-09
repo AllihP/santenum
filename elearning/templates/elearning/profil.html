@@ -1,0 +1,288 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - {{ user_profile.first_name }}</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Lexend%3Awght%40400%3B500%3B700%3B900&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+    
+    <style>
+        /* Styles personnalisés ou de débogage si nécessaire */
+        body { font-family: 'Lexend', 'Noto Sans', sans-serif; background-color: #f0f2f5; }
+        .layout-content-container {
+            max-width: 960px; /* Adapte la largeur maximale */
+            margin: 0 auto; /* Centre le contenu */
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 30px; /* Ajoute un padding général */
+        }
+        .profile-pic-lg {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #007bff; /* Bordure bleue */
+            margin-right: 20px; /* Espace à droite de l'image */
+        }
+        .section-heading {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #007bff; /* Couleur primaire pour les titres de section */
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .info-group {
+            margin-bottom: 15px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #111418;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .info-value {
+            padding: 12px 15px;
+            border: 1px solid #dbe0e6;
+            border-radius: 8px;
+            background-color: #f9fbfd;
+            color: #333;
+            font-size: 1rem;
+        }
+        .module-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #fefefe;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .module-item img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .module-details {
+            flex-grow: 1;
+        }
+        .module-details h3 {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .module-details p {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .module-item a {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .module-item a:hover {
+            background-color: #0056b3;
+        }
+        .no-modules {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style='font-family: Lexend, "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <div class="gap-1 px-6 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col w-80">
+            <div class="flex h-full min-h-[700px] flex-col justify-between bg-white p-4">
+              <div class="flex flex-col gap-4">
+                <div class="flex gap-3">
+                  {% if user_profile.profile_picture %}
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+                        style='background-image: url("{{ user_profile.profile_picture.url }}");'>
+                    </div>
+                  {% else %}
+                    <div class="flex items-center justify-center rounded-full size-10 bg-gray-300 text-gray-700 font-bold text-sm">
+                      {{ user_profile.first_name|first }}{{ user_profile.last_name|first }}
+                    </div>
+                  {% endif %}
+                  <h1 class="text-[#111418] text-base font-medium leading-normal">{{ user_profile.first_name }} {{ user_profile.last_name }}</h1>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#111418]" data-icon="House" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M218.83,103.77l-80-75.48a1.14,1.14,0,0,1-.11-.11,16,16,0,0,0-21.53,0l-.11.11L37.17,103.77A16,16,0,0,0,32,115.55V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V160h32v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V115.55A16,16,0,0,0,218.83,103.77ZM208,208H160V160a16,16,0,0,0-16-16H112a16,16,0,0,0-16,16v48H48V115.55l.11-.1L128,40l79.9,75.43.11.1Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#111418] text-sm font-medium leading-normal">Accueil</p>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#111418]" data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#111418] text-sm font-medium leading-normal">Catalogue</p>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#111418]" data-icon="Bookmark" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,16V161.57l-51.77-32.35a8,8,0,0,0-8.48,0L72,161.56V48ZM132.23,177.22a8,8,0,0,0-8.48,0L72,209.57V180.43l56-35,56,35v29.14Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#111418] text-sm font-medium leading-normal">Mes apprentissages</p>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#111418]" data-icon="Users" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#111418] text-sm font-medium leading-normal">Communauté</p>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#f0f2f5]">
+                    <div class="text-[#111418]" data-icon="User" data-size="24px" data-weight="fill">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M230.93,220a8,8,0,0,1-6.93,4H32a8,8,0,0,1-6.92-12c15.23-26.33,38.7-45.21,66.09-54.16a72,72,0,1,1,73.66,0c27.39,8.95,50.86,27.83,66.09,54.16A8,8,0,0,1,230.93,220Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#111418] text-sm font-medium leading-normal">Mon profil</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="flex flex-wrap justify-between gap-3 p-4">
+                <p class="text-[#111418] tracking-light text-[32px] font-bold leading-tight min-w-72">Mon profil</p>
+            </div>
+
+            <div class="flex p-4 @container">
+              <div class="flex w-full flex-col gap-4 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
+                <div class="flex gap-4 items-center">
+                  {% if user_profile.profile_picture %}
+                    <img src="{{ user_profile.profile_picture.url }}" alt="Photo de profil" class="profile-pic-lg">
+                  {% else %}
+                    <div class="profile-pic-lg flex items-center justify-center bg-gray-300 text-gray-700 text-4xl font-bold">
+                        {{ user_profile.first_name|first }}{{ user_profile.last_name|first }}
+                    </div>
+                  {% endif %}
+                  <div class="flex flex-col justify-center">
+                    <p class="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em]">{{ user_profile.first_name }} {{ user_profile.last_name }}</p>
+                    <p class="text-[#60748a] text-base font-normal leading-normal">{{ user_profile.email }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h2 class="section-heading px-4 pb-3 pt-5">Informations personnelles</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-4 py-3">
+              <div class="info-group">
+                <label class="info-label">Prénom</label>
+                <div class="info-value">{{ user_profile.first_name|default:"N/A" }}</div>
+              </div>
+              <div class="info-group">
+                <label class="info-label">Nom</label>
+                <div class="info-value">{{ user_profile.last_name|default:"N/A" }}</div>
+              </div>
+              <div class="info-group">
+                <label class="info-label">Nom d'utilisateur</label>
+                <div class="info-value">{{ user_profile.username|default:"N/A" }}</div>
+              </div>
+              <div class="info-group">
+                <label class="info-label">Adresse e-mail</label>
+                <div class="info-value">{{ user_profile.email|default:"N/A" }}</div>
+              </div>
+              <div class="info-group">
+                <label class="info-label">Profession Médicale</label>
+                <div class="info-value">{{ user_profile.profession_medicale|default:"Non spécifiée" }}</div>
+              </div>
+              <div class="info-group">
+                <label class="info-label">Type d'utilisateur</label>
+                <div class="info-value">{{ user_profile.get_type_utilisateur_display|default:"Non spécifié" }}</div>
+              </div>
+              <div class="info-group">
+                <label class="info-label">Téléphone</label>
+                <div class="info-value">{{ user_profile.telephone|default:"Non spécifié" }}</div>
+              </div>
+            </div>
+            
+           
+
+            <h2 class="section-heading px-4 pb-3 pt-5">Mes Modules E-learning</h2>
+            <div class="pb-3">
+              <div class="flex border-b border-[#dbe0e6] px-4 gap-8">
+                <a class="flex flex-col items-center justify-center border-b-[3px] border-b-[#111418] text-[#111418] pb-[13px] pt-4" href="#">
+                  <p class="text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]">En cours</p>
+                </a>
+                <a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-[#60748a] pb-[13px] pt-4" href="#">
+                  <p class="text-[#60748a] text-sm font-bold leading-normal tracking-[0.015em]">Terminés</p>
+                </a>
+              </div>
+            </div>
+
+            <div class="p-4">
+                {% if user_profile.module_enrollments.all %}
+                    {% for enrollment in user_profile.module_enrollments.all %}
+                        <div class="module-item">
+                            <img src="https://via.placeholder.com/90x90?text=Module" alt="Image du module" />
+                            <div class="module-details">
+                                <h3>{{ enrollment.module.titre }}</h3>
+                                <p>{{ enrollment.module.description|truncatechars:100 }}</p>
+                                {% if enrollment.completed %}
+                                    <p class="text-green-600 font-semibold">Statut : Terminé</p>
+                                {% else %}
+                                    <p class="text-blue-600 font-semibold">Statut : En Cours</p>
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'elearning:detail_module' enrollment.module.id %}" class="ml-auto">Accéder au module</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-modules">Vous n'êtes inscrit à aucun module pour le moment. <a href="{% url 'elearning:liste_modules' %}">Explorez nos modules !</a></p>
+                {% endif %}
+            </div>
+
+            <a href="{% url 'elearning:tableau_de_bord' %}" class="btn-back">Retour au Tableau de Bord</a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

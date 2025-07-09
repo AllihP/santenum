@@ -1,0 +1,43 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Détails de l'inscription" %} - {% trans "Santé Numérique Tchad" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>{% trans "Détails de l'inscription" %}</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5>{% trans "Événement" %}</h5>
+            <p><a href="{% url 'events:event_detail' slug=event.slug %}">{{ event.title }}</a></p>
+            <h5>{% trans "Participant" %}</h5>
+            <p>{{ registration.full_name }}</p>
+            <h5>{% trans "Email" %}</h5>
+            <p>{{ registration.email }}</p>
+            <h5>{% trans "Téléphone" %}</h5>
+            <p>{{ registration.phone|default:"Non spécifié" }}</p>
+            <h5>{% trans "Organisation" %}</h5>
+            <p>{{ registration.organization|default:"Non spécifié" }}</p>
+            <h5>{% trans "Poste" %}</h5>
+            <p>{{ registration.position|default:"Non spécifié" }}</p>
+            <h5>{% trans "Niveau d'expérience" %}</h5>
+            <p>{{ registration.get_experience_level_display|default:"Non spécifié" }}</p>
+            <h5>{% trans "Exigences alimentaires" %}</h5>
+            <p>{{ registration.dietary_requirements|default:"Aucune" }}</p>
+            <h5>{% trans "Besoins d'accessibilité" %}</h5>
+            <p>{{ registration.accessibility_needs|default:"Aucun" }}</p>
+            <h5>{% trans "Statut" %}</h5>
+            <form method="POST" action="{% url 'events:update_registration_status' registration_id=registration.id %}">
+                {% csrf_token %}
+                <select name="status" class="form-select mb-3">
+                    {% for status_value, status_label in registration.event.registrations.model.STATUS_CHOICES %}
+                    <option value="{{ status_value }}" {% if registration.status == status_value %}selected{% endif %}>{{ status_label }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">{% trans "Mettre à jour" %}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
