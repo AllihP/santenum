@@ -169,15 +169,13 @@ USE_TZ = True   # Active le support des fuseaux horaires (recommandé)
 
 # STATIC_URL: URL de base pour les fichiers statiques.
 STATIC_URL = '/static/'
-# In santenumerique/settings.py
 
-STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # This is where collectstatic will put files
 
 STATICFILES_DIRS = [
     # Example 1: If 'styles.css' is in 'your_project_root/santenumerique/styles/styles.css'
     # This means your 'styles' folder is directly under your main project folder.
-    os.path.join(BASE_DIR, 'santenumerique', 'styles'),
+    os.path.join(BASE_DIR, 'santenumerique', 'static'),
 
     # Example 2: If 'styles.css' is in 'your_project_root/santenumerique/static/styles/styles.css'
     # This means you have a 'static' folder directly under your main project folder.
